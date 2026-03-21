@@ -1,0 +1,29 @@
+# IDE & editor
+.vscode/
+.idea/
+
+# Claude Code project memory & plans
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env files (never commit credentials)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
