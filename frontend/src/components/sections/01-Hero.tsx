@@ -10,9 +10,9 @@ import LaserFlow from "@/components/ui/LaserFlow";
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
 
 const STAT_ITEMS = [
-  { value: "40+", label: "Projects" },
-  { value: "1+",  label: "Yr Exp"   },
-  { value: "∞",   label: "Learning" },
+  { value: "40+", raw: 40, label: "Projects" },
+  { value: "1+",  raw: 1,  label: "Yr Exp"   },
+  { value: "∞",   raw: 0,  label: "Learning" },
 ];
 
 const TERMINAL_LINES = [
@@ -31,26 +31,22 @@ interface Props {
 }
 
 export default function Hero({ ready }: Props) {
-  const sectionRef    = useRef<HTMLElement>(null);
-  const contentRef    = useRef<HTMLDivElement>(null);
-  const headingRef    = useRef<HTMLHeadingElement>(null);
-  const eyebrowRef    = useRef<HTMLSpanElement>(null);
-  const subRef        = useRef<HTMLParagraphElement>(null);
-  const ctaRef        = useRef<HTMLDivElement>(null);
-  const techStripRef  = useRef<HTMLDivElement>(null);
-  const scrollRef     = useRef<HTMLDivElement>(null);
-  const topBarRef     = useRef<HTMLDivElement>(null);
-  const ruleRef       = useRef<HTMLDivElement>(null);
-  const ghostRef      = useRef<HTMLDivElement>(null);
-  const orb1Ref       = useRef<HTMLDivElement>(null);
-  const orb2Ref       = useRef<HTMLDivElement>(null);
-  const orb3Ref       = useRef<HTMLDivElement>(null);
-  const bracketTLRef  = useRef<SVGSVGElement>(null);
-  const bracketBRRef  = useRef<SVGSVGElement>(null);
-  const statsRef      = useRef<HTMLDivElement>(null);
-  const gridRef       = useRef<HTMLDivElement>(null);
-  const gradLineRef   = useRef<HTMLDivElement>(null);
-  const terminalRef   = useRef<HTMLDivElement>(null);
+  const sectionRef   = useRef<HTMLElement>(null);
+  const contentRef   = useRef<HTMLDivElement>(null);
+  const headingRef   = useRef<HTMLHeadingElement>(null);
+  const availableRef = useRef<HTMLDivElement>(null);
+  const eyebrowRef   = useRef<HTMLSpanElement>(null);
+  const subRef       = useRef<HTMLParagraphElement>(null);
+  const ctaRef       = useRef<HTMLDivElement>(null);
+  const techStripRef = useRef<HTMLDivElement>(null);
+  const scrollRef    = useRef<HTMLDivElement>(null);
+  const ghostRef     = useRef<HTMLDivElement>(null);
+  const orb1Ref      = useRef<HTMLDivElement>(null);
+  const orb2Ref      = useRef<HTMLDivElement>(null);
+  const orb3Ref      = useRef<HTMLDivElement>(null);
+  const statsRef     = useRef<HTMLDivElement>(null);
+  const gridRef      = useRef<HTMLDivElement>(null);
+  const terminalRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrambleTextPlugin, DrawSVGPlugin);
@@ -82,6 +78,12 @@ export default function Hero({ ready }: Props) {
       gsap.to(ghostRef.current, {
         scale: 1.03, duration: 8,
         ease: "sine.inOut", yoyo: true, repeat: -1,
+      });
+
+      /* ── Terminal card subtle float ── */
+      gsap.to(terminalRef.current, {
+        y: -12, duration: 6,
+        ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.5,
       });
 
       /* ── Mouse parallax via quickTo ── */
@@ -132,14 +134,12 @@ export default function Hero({ ready }: Props) {
         scrub: 1.2,
         onUpdate: (self) => {
           const p = self.progress;
-          if (ghostRef.current)     gsap.set(ghostRef.current,     { y: -p * 15 });
-          if (orb1Ref.current)      gsap.set(orb1Ref.current,      { y: -p * 30 });
-          if (orb2Ref.current)      gsap.set(orb2Ref.current,      { y: -p * 20 });
-          if (orb3Ref.current)      gsap.set(orb3Ref.current,      { y: -p * 40 });
-          if (bracketTLRef.current) gsap.set(bracketTLRef.current, { y: -p * 10 });
-          if (bracketBRRef.current) gsap.set(bracketBRRef.current, { y: -p * 10 });
-          if (terminalRef.current)  gsap.set(terminalRef.current,  { y: -p * 25 });
-          if (contentRef.current)   gsap.set(contentRef.current,   { y: -p * 70, opacity: 1 - p * 1.2 });
+          if (ghostRef.current)    gsap.set(ghostRef.current,    { y: -p * 15 });
+          if (orb1Ref.current)     gsap.set(orb1Ref.current,     { y: -p * 30 });
+          if (orb2Ref.current)     gsap.set(orb2Ref.current,     { y: -p * 20 });
+          if (orb3Ref.current)     gsap.set(orb3Ref.current,     { y: -p * 40 });
+          if (terminalRef.current) gsap.set(terminalRef.current, { y: -p * 25 });
+          if (contentRef.current)  gsap.set(contentRef.current,  { y: -p * 70, opacity: 1 - p * 1.2 });
         },
       });
 
@@ -160,39 +160,14 @@ export default function Hero({ ready }: Props) {
         0
       );
 
-      // Top meta bar slide down
-      tl.fromTo(topBarRef.current,
-        { y: -18, opacity: 0 },
+      // Available for Work badge — slides up before eyebrow
+      tl.fromTo(availableRef.current,
+        { y: 14, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-        0.1
+        0.3
       );
 
-      // Horizontal rule draw + gradient line
-      tl.fromTo(ruleRef.current,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 1.0, ease: "power3.inOut" },
-        0.2
-      );
-      tl.fromTo(gradLineRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.8 },
-        0.9
-      );
-
-      // Corner brackets DrawSVG
-      if (bracketTLRef.current && bracketBRRef.current) {
-        tl.fromTo(
-          [
-            bracketTLRef.current.querySelectorAll("path"),
-            bracketBRRef.current.querySelectorAll("path"),
-          ],
-          { drawSVG: "0%" },
-          { drawSVG: "100%", duration: 1.2, ease: "power2.inOut", stagger: 0.1 },
-          0.2
-        );
-      }
-
-      // Eyebrow scramble
+      // Eyebrow scramble (delayed after badge)
       tl.fromTo(eyebrowRef.current,
         { opacity: 0 },
         {
@@ -204,11 +179,10 @@ export default function Hero({ ready }: Props) {
             });
           },
         },
-        0.3
+        0.55
       );
 
       // ── Good Fella line-mask reveal ──
-      // Each line inner starts below its overflow:hidden parent, snaps up with expo.out
       const lineInners = headingRef.current?.querySelectorAll(".hero-line-inner") ?? [];
       tl.fromTo(lineInners,
         { y: "110%", rotateX: 12 },
@@ -266,11 +240,25 @@ export default function Hero({ ready }: Props) {
         delay: cursorDelay + 0.4,
       });
 
-      // Stat pills stagger
-      tl.fromTo(
-        statsRef.current?.querySelectorAll(".hero-stat-item") ?? [],
+      // Stat pills stagger + count-up on numeric values
+      const statItems = statsRef.current?.querySelectorAll(".hero-stat-item") ?? [];
+      tl.fromTo(statItems,
         { y: 16, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.08 },
+        {
+          y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.08,
+          onStart() {
+            statsRef.current?.querySelectorAll<HTMLElement>(".stat-value-num").forEach((el) => {
+              const target = Number(el.getAttribute("data-target"));
+              if (!isNaN(target) && target > 0) {
+                const proxy = { val: 0 };
+                gsap.to(proxy, {
+                  val: target, duration: 1.2, ease: "power2.out",
+                  onUpdate() { el.textContent = Math.round(proxy.val) + "+"; },
+                });
+              }
+            });
+          },
+        },
         1.8
       );
 
@@ -312,66 +300,25 @@ export default function Hero({ ready }: Props) {
       <div ref={orb2Ref} className="hero-orb-2 absolute bottom-[-10%] right-[-8%] w-[700px] h-[700px] pointer-events-none" />
       <div ref={orb3Ref} className="hero-orb-3 absolute top-[30%] left-[30%] w-[500px] h-[500px] pointer-events-none" />
 
-      {/* Corner bracket — top left */}
-      <svg
-        ref={bracketTLRef}
-        className="absolute top-[calc(var(--nav-h)+80px)] left-[var(--gutter)] w-[60px] h-[60px] z-10 pointer-events-none"
-        viewBox="0 0 60 60" fill="none"
-        aria-hidden="true"
-      >
-        <path d="M60 0 L0 0 L0 60" stroke="var(--border-strong)" strokeWidth="1" />
-      </svg>
-
-      {/* Corner bracket — bottom right */}
-      <svg
-        ref={bracketBRRef}
-        className="absolute bottom-[calc(var(--gutter)+80px)] right-[var(--gutter)] w-[60px] h-[60px] z-10 pointer-events-none"
-        viewBox="0 0 60 60" fill="none"
-        aria-hidden="true"
-      >
-        <path d="M0 60 L60 60 L60 0" stroke="var(--border-strong)" strokeWidth="1" />
-      </svg>
-
-      {/* Top meta bar */}
-      <div
-        ref={topBarRef}
-        className="absolute top-[calc(var(--nav-h)+28px)] left-[var(--gutter)] right-[var(--gutter)] z-20 flex justify-between items-center"
-      >
-        <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)]">
-          Portfolio — 2025
-        </span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)] flex items-center gap-2">
-          <span className="relative inline-flex items-center justify-center w-[6px] h-[6px]">
-            <span className="pulse-ring" />
-            <span className="inline-block w-[6px] h-[6px] rounded-full bg-[#22c55e] relative z-10" />
-          </span>
-          Available for Work
-        </span>
-      </div>
-
-      {/* Thin rule */}
-      <div
-        ref={ruleRef}
-        className="absolute top-[calc(var(--nav-h)+64px)] left-[var(--gutter)] right-[var(--gutter)] h-px bg-[var(--border)] z-20 origin-left"
-      />
-
-      {/* Gradient sweep accent line */}
-      <div
-        ref={gradLineRef}
-        className="hero-gradient-line absolute top-[calc(var(--nav-h)+64px)] left-[var(--gutter)] right-[var(--gutter)] h-px z-20 opacity-0"
-      />
-
       {/* ── 2-Column grid ── */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[60fr_40fr] min-h-[100dvh] pt-[var(--nav-h)]">
 
         {/* ── LEFT COLUMN ── */}
         <div className="flex flex-col justify-between px-[var(--gutter)] py-[clamp(40px,8vh,100px)]">
 
-          {/* Spacer for top meta bar */}
-          <div className="h-14" />
-
           {/* Main content block */}
           <div ref={contentRef} className="flex flex-col">
+
+            {/* Available for Work badge — above eyebrow */}
+            <div ref={availableRef} className="flex items-center gap-2.5 mb-8 opacity-0">
+              <span className="relative inline-flex items-center justify-center w-[6px] h-[6px]">
+                <span className="pulse-ring" />
+                <span className="inline-block w-[6px] h-[6px] rounded-full bg-[#22c55e] relative z-10" />
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#22c55e]">
+                Available for Work
+              </span>
+            </div>
 
             {/* Eyebrow */}
             <span
@@ -445,7 +392,10 @@ export default function Hero({ ready }: Props) {
           <div ref={statsRef} className="flex items-center gap-8 mt-8 pt-8 border-t border-[var(--border)]">
             {STAT_ITEMS.map((s) => (
               <div key={s.label} className="hero-stat-item flex flex-col opacity-0">
-                <span className="font-[var(--font-heading)] text-[28px] font-bold tracking-[-0.04em] text-[var(--text-primary)] leading-none">
+                <span
+                  className="stat-value-num font-[var(--font-heading)] text-[28px] font-bold tracking-[-0.04em] text-[var(--text-primary)] leading-none"
+                  data-target={s.raw}
+                >
                   {s.value}
                 </span>
                 <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--text-muted)] mt-1">
