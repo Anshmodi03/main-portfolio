@@ -214,6 +214,26 @@ body {
   animation: gradientSweep 3.5s linear infinite;
 }
 
+/* ─── LaserFlow canvas ──────────────────────────────────────── */
+.laser-flow-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Cursor Trail canvas ───────────────────────────────────── */
+.cursor-trail-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 /* ─── Skills Ticker ─────────────────────────────────────────── */
 @keyframes tickerFlow {
   from { transform: translateX(0); }
@@ -291,6 +311,7 @@ h1, h2, h3, h4 {
   width: 8px;
   height: 8px;
   background: var(--accent);
+  box-shadow: 0 0 8px rgba(251,70,13,0.8);
 }
 
 .cursor-ring {
@@ -306,6 +327,7 @@ h1, h2, h3, h4 {
 .cursor-ring.hovering {
   width: 80px;
   height: 80px;
+  box-shadow: 0 0 20px rgba(251,70,13,0.25);
 }
 
 .cursor-ring.clicking {

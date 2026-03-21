@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { Button } from "@/components/ui/button";
+import LaserFlow from "@/components/ui/LaserFlow";
 
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
 
@@ -240,6 +241,16 @@ export default function Hero({ ready }: Props) {
       ref={sectionRef}
       className="relative min-h-[100dvh] overflow-hidden bg-[var(--bg-base)]"
     >
+      {/* Laser flow volumetric beam background */}
+      <LaserFlow
+        color="#fb460d"
+        wispDensity={1.2}
+        fogIntensity={0.32}
+        mouseTiltStrength={0.04}
+        flowSpeed={0.3}
+        flowStrength={0.22}
+      />
+
       {/* Dot grid atmospheric overlay */}
       <div
         ref={gridRef}
