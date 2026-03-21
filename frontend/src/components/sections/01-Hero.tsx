@@ -72,8 +72,8 @@ export default function Hero({ ready }: Props) {
 
       /* ── Terminal card subtle float + pulsing glow ── */
       gsap.to(terminalRef.current, {
-        y: -12, duration: 6,
-        ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.5,
+        y: -8, duration: 6,
+        ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2.3,
       });
       gsap.to(terminalRef.current, {
         boxShadow: "0 0 32px rgba(251,70,13,0.18), 0 0 64px rgba(251,70,13,0.06)",
@@ -191,21 +191,34 @@ export default function Hero({ ready }: Props) {
 
       // Terminal card slides up
       tl.fromTo(terminalRef.current,
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.0, ease: "expo.out" },
+        { y: 40, opacity: 0, scale: 0.97 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "expo.out" },
         0.8
       );
 
-      // Terminal lines stagger in
-      const termLines = terminalRef.current?.querySelectorAll(".terminal-line") ?? [];
-      tl.fromTo(termLines,
-        { opacity: 0, x: -10 },
-        { opacity: 1, x: 0, duration: 0.4, stagger: 0.18, ease: "power3.out" },
-        1.0
-      );
+      // Terminal lines — ScrambleText typewriter reveal per line
+      const termLineEls = terminalRef.current?.querySelectorAll(".terminal-line") ?? [];
+      termLineEls.forEach((el, i) => {
+        const spanEl = el.querySelector("span");
+        const originalText = TERMINAL_LINES[i].text;
+        const startT = 1.0 + i * 0.38;
+        tl.set(el, { opacity: 1 }, startT);
+        if (spanEl) {
+          tl.to(spanEl, {
+            duration: 0.35,
+            scrambleText: {
+              text: originalText,
+              chars: ">✓ abcdefghijklmnopqrstuvwxyz0123456789=-.:/",
+              revealDelay: 0,
+              speed: 0.7,
+            },
+            ease: "none",
+          }, startT);
+        }
+      });
 
       // Cursor appears after last line
-      const cursorDelay = 1.0 + 0.18 * TERMINAL_LINES.length;
+      const cursorDelay = 1.0 + (TERMINAL_LINES.length - 1) * 0.38 + 0.35 + 0.1;
       tl.fromTo(".terminal-cursor",
         { opacity: 0 },
         { opacity: 1, duration: 0.3 },
