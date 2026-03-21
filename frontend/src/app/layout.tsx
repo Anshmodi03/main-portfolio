@@ -4,7 +4,6 @@ import "../styles/globals.css";
 import LenisProvider from "@/providers/LenisProvider";
 import "@/lib/gsap"; // register GSAP plugins client-side (tree-shaken safely)
 import CustomCursor from "@/components/ui/CustomCursor";
-import CursorTrail from "@/components/ui/CursorTrail";
 import NoiseOverlay from "@/components/ui/NoiseOverlay";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import { cn } from "@/lib/utils";
@@ -57,8 +56,7 @@ export default function RootLayout({
           <NoiseOverlay />
           <ScrollProgress />
           <CustomCursor />
-          <CursorTrail />
-          {children}
+{children}
         </LenisProvider>
       </body>
     </html>
