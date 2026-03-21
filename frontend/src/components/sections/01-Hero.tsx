@@ -5,7 +5,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
-import LaserFlow from "@/components/ui/LaserFlow";
 
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
 
@@ -39,7 +38,7 @@ export default function Hero({ ready }: Props) {
   const ctaRef       = useRef<HTMLDivElement>(null);
   const techStripRef = useRef<HTMLDivElement>(null);
   const scrollRef    = useRef<HTMLDivElement>(null);
-  const ghostRef     = useRef<HTMLDivElement>(null);
+  const locationRef  = useRef<HTMLDivElement>(null);
   const orb1Ref      = useRef<HTMLDivElement>(null);
   const orb2Ref      = useRef<HTMLDivElement>(null);
   const orb3Ref      = useRef<HTMLDivElement>(null);
@@ -73,32 +72,29 @@ export default function Hero({ ready }: Props) {
         ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1,
       });
 
-      /* ── Ghost "AM" breathe ── */
-      gsap.to(ghostRef.current, {
-        scale: 1.03, duration: 8,
-        ease: "sine.inOut", yoyo: true, repeat: -1,
-      });
-
-      /* ── Terminal card subtle float ── */
+      /* ── Terminal card subtle float + pulsing glow ── */
       gsap.to(terminalRef.current, {
         y: -12, duration: 6,
         ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.5,
       });
+      gsap.to(terminalRef.current, {
+        boxShadow: "0 0 32px rgba(251,70,13,0.18), 0 0 64px rgba(251,70,13,0.06)",
+        duration: 3,
+        ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2.0,
+      });
 
       /* ── Mouse parallax via quickTo ── */
       const xQ = [
-        gsap.quickTo(orb1Ref.current,  "x", { duration: 1.2, ease: "power3.out" }),
-        gsap.quickTo(orb2Ref.current,  "x", { duration: 1.6, ease: "power3.out" }),
-        gsap.quickTo(orb3Ref.current,  "x", { duration: 0.9, ease: "power3.out" }),
-        gsap.quickTo(ghostRef.current, "x", { duration: 2.0, ease: "power3.out" }),
+        gsap.quickTo(orb1Ref.current, "x", { duration: 1.2, ease: "power3.out" }),
+        gsap.quickTo(orb2Ref.current, "x", { duration: 1.6, ease: "power3.out" }),
+        gsap.quickTo(orb3Ref.current, "x", { duration: 0.9, ease: "power3.out" }),
       ];
       const yQ = [
-        gsap.quickTo(orb1Ref.current,  "y", { duration: 1.2, ease: "power3.out" }),
-        gsap.quickTo(orb2Ref.current,  "y", { duration: 1.6, ease: "power3.out" }),
-        gsap.quickTo(orb3Ref.current,  "y", { duration: 0.9, ease: "power3.out" }),
-        gsap.quickTo(ghostRef.current, "y", { duration: 2.0, ease: "power3.out" }),
+        gsap.quickTo(orb1Ref.current, "y", { duration: 1.2, ease: "power3.out" }),
+        gsap.quickTo(orb2Ref.current, "y", { duration: 1.6, ease: "power3.out" }),
+        gsap.quickTo(orb3Ref.current, "y", { duration: 0.9, ease: "power3.out" }),
       ];
-      const DEPTHS = [0.04, 0.03, 0.06, 0.015];
+      const DEPTHS = [0.04, 0.03, 0.06];
 
       const onMouseMove = (e: MouseEvent) => {
         const cx = e.clientX - window.innerWidth  / 2;
@@ -133,7 +129,6 @@ export default function Hero({ ready }: Props) {
         scrub: 1.2,
         onUpdate: (self) => {
           const p = self.progress;
-          if (ghostRef.current)    gsap.set(ghostRef.current,    { y: -p * 15 });
           if (orb1Ref.current)     gsap.set(orb1Ref.current,     { y: -p * 30 });
           if (orb2Ref.current)     gsap.set(orb2Ref.current,     { y: -p * 20 });
           if (orb3Ref.current)     gsap.set(orb3Ref.current,     { y: -p * 40 });
@@ -152,11 +147,11 @@ export default function Hero({ ready }: Props) {
         0
       );
 
-      // Ghost AM materialise
-      tl.fromTo(ghostRef.current,
-        { opacity: 0, scale: 0.94 },
-        { opacity: 0.04, scale: 1, duration: 2.4, ease: "power1.out" },
-        0
+      // Location badge slides in
+      tl.fromTo(locationRef.current,
+        { x: -16, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        0.2
       );
 
       // Eyebrow scramble
@@ -232,12 +227,12 @@ export default function Hero({ ready }: Props) {
         delay: cursorDelay + 0.4,
       });
 
-      // Stat pills stagger + count-up on numeric values
+      // Stat strip appears below terminal after cursor
       const statItems = statsRef.current?.querySelectorAll(".hero-stat-item") ?? [];
       tl.fromTo(statItems,
         { y: 16, opacity: 0 },
         {
-          y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.08,
+          y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.1,
           onStart() {
             statsRef.current?.querySelectorAll<HTMLElement>(".stat-value-num").forEach((el) => {
               const target = Number(el.getAttribute("data-target"));
@@ -251,7 +246,7 @@ export default function Hero({ ready }: Props) {
             });
           },
         },
-        1.8
+        cursorDelay + 0.2
       );
 
       // Scroll indicator
@@ -274,14 +269,6 @@ export default function Hero({ ready }: Props) {
     >
       {/* ── Background layer — overflow contained here, NOT on section root ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <LaserFlow
-          color="#fb460d"
-          wispDensity={1.0}
-          fogIntensity={0.28}
-          mouseTiltStrength={0.035}
-          flowSpeed={0.3}
-          flowStrength={0.2}
-        />
         <div
           ref={gridRef}
           className="hero-dot-grid absolute inset-0 z-0 opacity-0"
@@ -300,6 +287,17 @@ export default function Hero({ ready }: Props) {
 
           {/* Main content block */}
           <div ref={contentRef} className="flex flex-col">
+
+            {/* Location badge */}
+            <div ref={locationRef} className="flex items-center gap-2 mb-6 opacity-0">
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
+                India
+              </span>
+              <span className="w-px h-3 bg-[var(--border-strong)]" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
+                Open to Remote
+              </span>
+            </div>
 
             {/* Heading — per-line mask reveal */}
             <h1
@@ -322,7 +320,7 @@ export default function Hero({ ready }: Props) {
               with the MERN stack, TypeScript, and pixel-precise UI.
             </p>
 
-            {/* CTA row — Good Fella style */}
+            {/* CTA row */}
             <div ref={ctaRef} className="flex gap-4 flex-wrap items-center mb-7 opacity-0">
               <button
                 type="button"
@@ -343,6 +341,15 @@ export default function Hero({ ready }: Props) {
               >
                 Get In Touch →
               </button>
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--border-strong)] hover:text-[var(--text-muted)] transition-colors duration-200 cursor-none ml-2"
+                data-cursor="link"
+              >
+                ↗ Resume
+              </a>
             </div>
 
             {/* Tech strip */}
@@ -360,40 +367,10 @@ export default function Hero({ ready }: Props) {
               ))}
             </div>
           </div>
-
-          {/* Stat row — bottom of left column */}
-          <div ref={statsRef} className="flex items-center gap-8 mt-auto pt-8 border-t border-[var(--border)]">
-            {STAT_ITEMS.map((s) => (
-              <div key={s.label} className="hero-stat-item flex flex-col opacity-0">
-                <span
-                  className="stat-value-num font-[var(--font-heading)] text-[28px] font-bold tracking-[-0.04em] text-[var(--text-primary)] leading-none"
-                  data-target={s.raw}
-                >
-                  {s.value}
-                </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--text-muted)] mt-1">
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* ── RIGHT COLUMN ── */}
-        <div className="hidden lg:flex relative items-center justify-center overflow-hidden py-[clamp(40px,8vh,100px)] pr-[var(--gutter)]">
-
-          {/* Ghost "AM" — subtle background texture in right col */}
-          <div
-            ref={ghostRef}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-0 z-0"
-            aria-hidden="true"
-          >
-            <span
-              className="hero-ghost-am-text font-bold tracking-[-0.06em] font-[var(--font-heading)] leading-none text-[var(--text-primary)]"
-            >
-              AM
-            </span>
-          </div>
+        <div className="hidden lg:flex flex-col relative items-center justify-center overflow-hidden py-[clamp(32px,6vh,80px)] pr-[var(--gutter)]">
 
           {/* Eyebrow — right side */}
           <span
@@ -436,6 +413,23 @@ export default function Hero({ ready }: Props) {
               ))}
               <span className="terminal-cursor inline-block w-[8px] h-[14px] bg-[var(--accent)] align-middle opacity-0" />
             </div>
+          </div>
+
+          {/* Stat strip — below terminal */}
+          <div ref={statsRef} className="flex items-center gap-8 mt-6 pt-6 border-t border-[var(--border)] w-[min(420px,85%)]">
+            {STAT_ITEMS.map((s) => (
+              <div key={s.label} className="hero-stat-item flex flex-col opacity-0">
+                <span
+                  className="stat-value-num font-[var(--font-heading)] text-[clamp(24px,2.5vw,36px)] font-bold tracking-[-0.04em] text-[var(--text-primary)] leading-none"
+                  data-target={s.raw}
+                >
+                  {s.value}
+                </span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--text-muted)] mt-1">
+                  {s.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
