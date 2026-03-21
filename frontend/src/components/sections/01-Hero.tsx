@@ -34,7 +34,6 @@ export default function Hero({ ready }: Props) {
   const sectionRef   = useRef<HTMLElement>(null);
   const contentRef   = useRef<HTMLDivElement>(null);
   const headingRef   = useRef<HTMLHeadingElement>(null);
-  const availableRef = useRef<HTMLDivElement>(null);
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const subRef       = useRef<HTMLParagraphElement>(null);
   const ctaRef       = useRef<HTMLDivElement>(null);
@@ -160,14 +159,7 @@ export default function Hero({ ready }: Props) {
         0
       );
 
-      // Available for Work badge — slides up before eyebrow
-      tl.fromTo(availableRef.current,
-        { y: 14, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-        0.3
-      );
-
-      // Eyebrow scramble (delayed after badge)
+      // Eyebrow scramble
       tl.fromTo(eyebrowRef.current,
         { opacity: 0 },
         {
@@ -179,7 +171,7 @@ export default function Hero({ ready }: Props) {
             });
           },
         },
-        0.55
+        0.3
       );
 
       // ── Good Fella line-mask reveal ──
@@ -309,25 +301,6 @@ export default function Hero({ ready }: Props) {
           {/* Main content block */}
           <div ref={contentRef} className="flex flex-col">
 
-            {/* Available for Work badge — above eyebrow */}
-            <div ref={availableRef} className="flex items-center gap-2.5 mb-8 opacity-0">
-              <span className="relative inline-flex items-center justify-center w-[6px] h-[6px]">
-                <span className="pulse-ring" />
-                <span className="inline-block w-[6px] h-[6px] rounded-full bg-[#22c55e] relative z-10" />
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#22c55e]">
-                Available for Work
-              </span>
-            </div>
-
-            {/* Eyebrow */}
-            <span
-              ref={eyebrowRef}
-              className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)] mb-8 block opacity-0"
-            >
-              // Full Stack Developer
-            </span>
-
             {/* Heading — per-line mask reveal */}
             <h1
               ref={headingRef}
@@ -421,6 +394,14 @@ export default function Hero({ ready }: Props) {
               AM
             </span>
           </div>
+
+          {/* Eyebrow — right side */}
+          <span
+            ref={eyebrowRef}
+            className="absolute top-[clamp(24px,5vh,56px)] left-0 right-[var(--gutter)] text-right font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)] opacity-0 z-10"
+          >
+            // Full Stack Developer
+          </span>
 
           {/* Terminal code card */}
           <div

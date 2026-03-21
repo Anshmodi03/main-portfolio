@@ -84,6 +84,15 @@ export default function Navbar() {
           AM
         </a>
 
+        {/* Available for Work badge */}
+        <span className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#22c55e] z-[1001]">
+          <span className="relative inline-flex items-center justify-center w-[6px] h-[6px]">
+            <span className="pulse-ring" />
+            <span className="inline-block w-[6px] h-[6px] rounded-full bg-[#22c55e] relative z-10" />
+          </span>
+          Available for Work
+        </span>
+
         {/* Hamburger — shown on ALL screen sizes */}
         <button
           type="button"
