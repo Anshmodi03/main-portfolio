@@ -270,33 +270,33 @@ export default function Hero({ ready }: Props) {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative min-h-[100dvh] overflow-hidden bg-[var(--bg-base)]"
+      className="relative min-h-[100dvh] bg-[var(--bg-base)]"
     >
-      {/* ── Background layers ── */}
-      <LaserFlow
-        color="#fb460d"
-        wispDensity={1.0}
-        fogIntensity={0.28}
-        mouseTiltStrength={0.035}
-        flowSpeed={0.3}
-        flowStrength={0.2}
-      />
-
-      <div
-        ref={gridRef}
-        className="hero-dot-grid absolute inset-0 z-0 pointer-events-none opacity-0"
-      />
-
-      {/* Glow orbs */}
-      <div ref={orb1Ref} className="hero-orb-1 absolute -top-[15%] -left-[5%] w-[900px] h-[900px] pointer-events-none" />
-      <div ref={orb2Ref} className="hero-orb-2 absolute bottom-[-10%] right-[-8%] w-[700px] h-[700px] pointer-events-none" />
-      <div ref={orb3Ref} className="hero-orb-3 absolute top-[30%] left-[30%] w-[500px] h-[500px] pointer-events-none" />
+      {/* ── Background layer — overflow contained here, NOT on section root ── */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <LaserFlow
+          color="#fb460d"
+          wispDensity={1.0}
+          fogIntensity={0.28}
+          mouseTiltStrength={0.035}
+          flowSpeed={0.3}
+          flowStrength={0.2}
+        />
+        <div
+          ref={gridRef}
+          className="hero-dot-grid absolute inset-0 z-0 opacity-0"
+        />
+        {/* Glow orbs */}
+        <div ref={orb1Ref} className="hero-orb-1 absolute -top-[15%] -left-[5%] w-[900px] h-[900px]" />
+        <div ref={orb2Ref} className="hero-orb-2 absolute bottom-[-10%] right-[-8%] w-[700px] h-[700px]" />
+        <div ref={orb3Ref} className="hero-orb-3 absolute top-[30%] left-[30%] w-[500px] h-[500px]" />
+      </div>
 
       {/* ── 2-Column grid ── */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[60fr_40fr] min-h-[100dvh] pt-[var(--nav-h)]">
 
         {/* ── LEFT COLUMN ── */}
-        <div className="flex flex-col justify-between px-[var(--gutter)] py-[clamp(40px,8vh,100px)]">
+        <div className="flex flex-col px-[var(--gutter)] pt-[clamp(24px,4vh,48px)] pb-[clamp(24px,4vh,48px)]">
 
           {/* Main content block */}
           <div ref={contentRef} className="flex flex-col">
@@ -304,7 +304,7 @@ export default function Hero({ ready }: Props) {
             {/* Heading — per-line mask reveal */}
             <h1
               ref={headingRef}
-              className="hero-heading-3d m-0 mb-6 font-bold tracking-[-0.05em] leading-[0.88] text-[clamp(52px,7vw,110px)] font-[var(--font-heading)]"
+              className="hero-heading-3d m-0 mb-5 font-bold tracking-[-0.05em] leading-[0.9] text-[clamp(40px,5.5vw,88px)] font-[var(--font-heading)]"
             >
               {LINES.map((line, i) => (
                 <span key={i} className="block overflow-hidden">
@@ -316,14 +316,14 @@ export default function Hero({ ready }: Props) {
             {/* Sub-text */}
             <p
               ref={subRef}
-              className="font-mono text-[13px] text-[var(--text-muted)] tracking-[0.02em] leading-relaxed mb-10 max-w-[480px] opacity-0"
+              className="font-mono text-[13px] text-[var(--text-muted)] tracking-[0.02em] leading-relaxed mb-5 max-w-[480px] opacity-0"
             >
               Full Stack Developer based in India. Building end-to-end web experiences
               with the MERN stack, TypeScript, and pixel-precise UI.
             </p>
 
             {/* CTA row — Good Fella style */}
-            <div ref={ctaRef} className="flex gap-4 flex-wrap items-center mb-12 opacity-0">
+            <div ref={ctaRef} className="flex gap-4 flex-wrap items-center mb-7 opacity-0">
               <button
                 type="button"
                 onClick={() => document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })}
@@ -362,7 +362,7 @@ export default function Hero({ ready }: Props) {
           </div>
 
           {/* Stat row — bottom of left column */}
-          <div ref={statsRef} className="flex items-center gap-8 mt-8 pt-8 border-t border-[var(--border)]">
+          <div ref={statsRef} className="flex items-center gap-8 mt-auto pt-8 border-t border-[var(--border)]">
             {STAT_ITEMS.map((s) => (
               <div key={s.label} className="hero-stat-item flex flex-col opacity-0">
                 <span
