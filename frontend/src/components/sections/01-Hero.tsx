@@ -8,10 +8,10 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
 
-const STAT_ITEMS = [
-  { value: "40+", raw: 40, label: "Projects" },
-  { value: "1+",  raw: 1,  label: "Yr Exp"   },
-  { value: "∞",   raw: 0,  label: "Learning" },
+const SERVICES = [
+  { role: "Frontend", stack: "React · Next.js · GSAP"   },
+  { role: "Backend",  stack: "Node.js · Express · REST" },
+  { role: "Database", stack: "MongoDB · TypeScript"      },
 ];
 
 const TERMINAL_LINES = [
@@ -45,7 +45,7 @@ export default function Hero({ ready }: Props) {
   const orb1Ref      = useRef<HTMLDivElement>(null);
   const orb2Ref      = useRef<HTMLDivElement>(null);
   const orb3Ref      = useRef<HTMLDivElement>(null);
-  const statsRef     = useRef<HTMLDivElement>(null);
+  const servicesRef  = useRef<HTMLDivElement>(null);
   const gridRef      = useRef<HTMLDivElement>(null);
   const terminalRef  = useRef<HTMLDivElement>(null);
 
@@ -223,26 +223,17 @@ export default function Hero({ ready }: Props) {
         delay: cursorDelay + 0.4,
       });
 
-      // Stat strip appears below terminal after cursor
-      const statItems = statsRef.current?.querySelectorAll(".hero-stat-item") ?? [];
-      tl.fromTo(statItems,
-        { y: 16, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.1,
-          onStart() {
-            statsRef.current?.querySelectorAll<HTMLElement>(".stat-value-num").forEach((el) => {
-              const target = Number(el.getAttribute("data-target"));
-              if (!isNaN(target) && target > 0) {
-                const proxy = { val: 0 };
-                gsap.to(proxy, {
-                  val: target, duration: 1.2, ease: "power2.out",
-                  onUpdate() { el.textContent = Math.round(proxy.val) + "+"; },
-                });
-              }
-            });
-          },
-        },
-        cursorDelay + 0.2
+      // Services list slides in after cursor
+      const serviceItems = servicesRef.current?.querySelectorAll(".hero-service-item") ?? [];
+      tl.fromTo(servicesRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.2 },
+        cursorDelay + 0.1
+      );
+      tl.fromTo(serviceItems,
+        { x: -14, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.1 },
+        cursorDelay + 0.15
       );
 
       // Scroll indicator
@@ -412,18 +403,17 @@ export default function Hero({ ready }: Props) {
             </div>
           </div>
 
-          {/* Stat strip — below terminal */}
-          <div ref={statsRef} className="flex items-center gap-8 mt-6 pt-6 border-t border-[var(--border)] w-[min(420px,85%)]">
-            {STAT_ITEMS.map((s) => (
-              <div key={s.label} className="hero-stat-item flex flex-col opacity-0">
-                <span
-                  className="stat-value-num font-[var(--font-heading)] text-[clamp(24px,2.5vw,36px)] font-bold tracking-[-0.04em] text-[var(--text-primary)] leading-none"
-                  data-target={s.raw}
-                >
-                  {s.value}
+          {/* Service list — below terminal */}
+          <div ref={servicesRef} className="mt-5 w-[min(420px,85%)] flex flex-col gap-[10px] opacity-0">
+            {SERVICES.map((s, i) => (
+              <div key={i} className="hero-service-item flex items-center gap-3 opacity-0">
+                <span className="font-mono text-[10px] text-[var(--accent)] tracking-[0.1em] select-none">//</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  {s.role}
                 </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--text-muted)] mt-1">
-                  {s.label}
+                <span className="w-px h-3 bg-[var(--border-strong)] shrink-0" />
+                <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--border-strong)]">
+                  {s.stack}
                 </span>
               </div>
             ))}
