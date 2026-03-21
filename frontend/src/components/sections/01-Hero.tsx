@@ -318,33 +318,55 @@ export default function Hero({ ready }: Props) {
 
             {/* CTA row */}
             <div ref={ctaRef} className="flex gap-4 flex-wrap items-center mb-7 opacity-0">
+              {/* Primary CTA — Good Fella 3-part spinning + button */}
               <button
                 type="button"
                 onClick={() => document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })}
-                className="flex items-center gap-3 bg-[var(--accent)] text-white font-mono text-[11px] uppercase tracking-[0.14em] h-12 px-8 rounded-none transition-colors duration-200 hover:bg-[var(--accent-hover)] cursor-none"
+                className="group relative inline-flex cursor-none border-none bg-transparent p-0"
                 data-cursor="link"
+                aria-label="Selected Work"
               >
-                Selected Work
-                <span className="inline-flex items-center justify-center w-5 h-5 border border-white/30 rounded-full text-[10px] font-bold leading-none">
-                  +
+                <span className="relative flex items-center gap-[6px]">
+                  <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                    </svg>
+                  </span>
+                  <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
+                    Selected Work
+                  </span>
+                  <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                    </svg>
+                  </span>
                 </span>
               </button>
+              {/* Secondary CTA — sweeping underline */}
               <button
                 type="button"
                 onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-                className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 underline-offset-4 hover:underline cursor-none"
+                className="group relative inline-block cursor-none border-none bg-transparent p-0 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-300"
                 data-cursor="link"
               >
                 Get In Touch →
+                <span className="pointer-events-none absolute inset-x-0 -bottom-[2px]" aria-hidden="true">
+                  <span className="absolute inset-x-0 top-0 h-px bg-current origin-left scale-x-100 transition-transform duration-700 [transition-timing-function:cubic-bezier(0.625,0.05,0,1)] delay-300 group-hover:origin-right group-hover:scale-x-0 group-hover:delay-0" />
+                  <span className="absolute inset-x-0 top-0 h-px bg-current origin-right scale-x-0 transition-transform duration-700 [transition-timing-function:cubic-bezier(0.625,0.05,0,1)] delay-0 group-hover:origin-left group-hover:scale-x-100 group-hover:delay-300" />
+                </span>
               </button>
               <a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--border-strong)] hover:text-[var(--text-muted)] transition-colors duration-200 cursor-none ml-2"
+                className="group relative inline-block cursor-none ml-2 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--border-strong)] hover:text-[var(--text-muted)] transition-colors duration-300"
                 data-cursor="link"
               >
                 ↗ Resume
+                <span className="pointer-events-none absolute inset-x-0 -bottom-[2px]" aria-hidden="true">
+                  <span className="absolute inset-x-0 top-0 h-px bg-current origin-left scale-x-100 transition-transform duration-700 [transition-timing-function:cubic-bezier(0.625,0.05,0,1)] delay-300 group-hover:origin-right group-hover:scale-x-0 group-hover:delay-0" />
+                  <span className="absolute inset-x-0 top-0 h-px bg-current origin-right scale-x-0 transition-transform duration-700 [transition-timing-function:cubic-bezier(0.625,0.05,0,1)] delay-0 group-hover:origin-left group-hover:scale-x-100 group-hover:delay-300" />
+                </span>
               </a>
             </div>
 

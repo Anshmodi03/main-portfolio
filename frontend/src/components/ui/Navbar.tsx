@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 
 const NAV_LINKS = [
   { label: "Work",       href: "#projects" },
@@ -12,10 +13,15 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
-  const navRef     = useRef<HTMLElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const navRef       = useRef<HTMLElement>(null);
+  const overlayRef   = useRef<HTMLDivElement>(null);
+  const menuLabelRef = useRef<HTMLSpanElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrambleTextPlugin);
+  }, []);
 
   /* Entrance — delayed until after preloader (~3.1s) */
   useEffect(() => {
@@ -47,6 +53,11 @@ export default function Navbar() {
       { y: "80%", opacity: 0 },
       { y: "0%", opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.07, delay: 0.3 }
     );
+    gsap.to(menuLabelRef.current, {
+      duration: 0.4,
+      scrambleText: { text: "Close", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.8 },
+      ease: "none",
+    });
   };
 
   const closeMenu = () => {
@@ -57,6 +68,12 @@ export default function Navbar() {
       ease: "power4.inOut",
       delay: 0.1,
       onComplete: () => setOpen(false),
+    });
+    gsap.to(menuLabelRef.current, {
+      duration: 0.4,
+      scrambleText: { text: "Menu", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.8 },
+      ease: "none",
+      delay: 0.15,
     });
   };
 
@@ -105,8 +122,11 @@ export default function Navbar() {
             <span className="nav-menu-btn__bar" />
             <span className="nav-menu-btn__bar w-full" />
           </span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-primary)]">
-            {open ? "Close" : "Menu"}
+          <span
+            ref={menuLabelRef}
+            className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-primary)]"
+          >
+            Menu
           </span>
         </button>
       </nav>
@@ -127,11 +147,20 @@ export default function Navbar() {
                 className="nav-overlay-link block w-full text-left text-[clamp(48px,9vw,110px)] font-bold tracking-[-0.04em] leading-[1.0] text-[var(--text-muted)] bg-transparent border-none hover:text-[var(--text-primary)] transition-colors duration-200 cursor-none font-[var(--font-heading)]"
                 onClick={() => navigate(link.href)}
                 data-cursor="link"
+                onMouseEnter={(e) => {
+                  const labelEl = e.currentTarget.querySelector(".nav-link-label") as HTMLElement;
+                  if (!labelEl) return;
+                  gsap.to(labelEl, {
+                    duration: 0.5,
+                    scrambleText: { text: link.label, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.6 },
+                    ease: "none",
+                  });
+                }}
               >
                 <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-[var(--accent)] mr-4 align-middle">
                   0{i + 1}
                 </span>
-                {link.label}
+                <span className="nav-link-label">{link.label}</span>
               </button>
             </div>
           ))}
