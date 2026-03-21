@@ -180,6 +180,9 @@ body {
 /* Third hero orb */
 .hero-orb-3 { background: radial-gradient(circle, rgba(251,70,13,0.04) 0%, transparent 70%); }
 
+/* 3D perspective preserve for heading mouse-tilt */
+.hero-heading-3d { transform-style: preserve-3d; }
+
 /* Dot grid overlay */
 .hero-dot-grid {
   background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);

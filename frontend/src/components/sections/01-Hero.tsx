@@ -341,8 +341,7 @@ export default function Hero({ ready }: Props) {
         {/* Heading */}
         <h1
           ref={headingRef}
-          className="m-0 mb-8 font-bold tracking-[-0.05em] leading-[0.88] text-[clamp(48px,7vw,120px)] font-[var(--font-heading)]"
-          style={{ transformStyle: "preserve-3d" }}
+          className="hero-heading-3d m-0 mb-8 font-bold tracking-[-0.05em] leading-[0.88] text-[clamp(48px,7vw,120px)] font-[var(--font-heading)]"
         >
           {LINES.map((line, i) => (
             <span key={i} className="block overflow-hidden">
