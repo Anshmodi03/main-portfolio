@@ -23,10 +23,6 @@ const TERMINAL_LINES = [
   { type: "cmd",   text: "> Server running on localhost:3000"  },
 ];
 
-const TECH_MARQUEE = [
-  "React", "Next.js", "Node.js", "MongoDB", "TypeScript",
-  "Express", "TailwindCSS", "GSAP", "REST APIs", "Git",
-];
 
 interface Props {
   ready: boolean;
@@ -39,7 +35,6 @@ export default function Hero({ ready }: Props) {
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const subRef       = useRef<HTMLParagraphElement>(null);
   const ctaRef       = useRef<HTMLDivElement>(null);
-  const marqueeRef   = useRef<HTMLDivElement>(null);
   const scrollRef    = useRef<HTMLDivElement>(null);
   const locationRef  = useRef<HTMLDivElement>(null);
   const orb1Ref      = useRef<HTMLDivElement>(null);
@@ -243,20 +238,6 @@ export default function Hero({ ready }: Props) {
         "-=0.3"
       );
 
-      // Marquee strip fade-in
-      tl.fromTo(marqueeRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.8, ease: "power2.out" },
-        "-=0.2"
-      );
-
-      // Infinite horizontal scroll
-      gsap.to(".hero-marquee-track", {
-        x: "-50%",
-        duration: 28,
-        ease: "none",
-        repeat: -1,
-      });
 
     }, sectionRef);
 
@@ -285,7 +266,7 @@ export default function Hero({ ready }: Props) {
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[60fr_40fr] min-h-[100dvh] pt-[var(--nav-h)]">
 
         {/* ── LEFT COLUMN ── */}
-        <div className="flex flex-col px-[var(--gutter)] pt-[clamp(24px,4vh,48px)] pb-[clamp(56px,8vh,100px)]">
+        <div className="flex flex-col px-[var(--gutter)] pt-[clamp(24px,4vh,48px)] pb-[clamp(24px,4vh,48px)]">
 
           {/* Main content block */}
           <div ref={contentRef} className="flex flex-col">
@@ -418,24 +399,6 @@ export default function Hero({ ready }: Props) {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* ── Full-width tech marquee ticker ── */}
-      <div
-        ref={marqueeRef}
-        className="absolute bottom-[40px] left-0 right-0 z-10 border-t border-[var(--border)] overflow-hidden opacity-0"
-        aria-hidden="true"
-      >
-        <div className="hero-marquee-track flex items-center whitespace-nowrap w-max py-3">
-          {[...TECH_MARQUEE, ...TECH_MARQUEE].map((item, i) => (
-            <span key={i} className="flex items-center">
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--text-muted)] px-6">
-                {item}
-              </span>
-              <span className="text-[var(--accent)] text-[8px] select-none">·</span>
-            </span>
-          ))}
         </div>
       </div>
 
