@@ -183,6 +183,12 @@ body {
 /* 3D perspective preserve for heading mouse-tilt */
 .hero-heading-3d { transform-style: preserve-3d; }
 
+/* Ghost AM text — clamp font-size not expressible as Tailwind utility */
+.hero-ghost-am-text { font-size: clamp(180px, 22vw, 340px); }
+
+/* Terminal cursor blink start state — GSAP drives opacity */
+.terminal-cursor { opacity: 0; }
+
 /* Dot grid overlay */
 .hero-dot-grid {
   background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
