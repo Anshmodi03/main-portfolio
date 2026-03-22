@@ -177,8 +177,8 @@ export default function Hero({ ready }: Props) {
       // ── Good Fella line-mask reveal ──
       const lineInners = headingRef.current?.querySelectorAll(".hero-line-inner") ?? [];
       tl.fromTo(lineInners,
-        { y: "110%", rotateX: 12, filter: "blur(14px)" },
-        { y: "0%", rotateX: 0, filter: "blur(0px)", duration: 1.1, ease: "expo.out", stagger: 0.1 },
+        { y: "110%", rotateX: 12, filter: "blur(14px)", opacity: 0 },
+        { y: "0%", rotateX: 0, filter: "blur(0px)", opacity: 1, duration: 1.1, ease: "expo.out", stagger: 0.1 },
         0.5
       );
 

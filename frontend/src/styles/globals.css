@@ -158,6 +158,8 @@ body {
 .hero-word-inner  { display: block; will-change: transform; }
 .clip-start       { clip-path: inset(0 0 100% 0); }
 .nav-overlay-init { clip-path: inset(0 0 100% 0); }
+/* hero heading lines — hidden below line mask before GSAP entrance */
+.hero-line-inner  { transform: translateY(110%); opacity: 0; }
 
 /* ─── Scroll Line Animation ─────────────────────────────────── */
 @keyframes scrollLineAnim {
@@ -293,29 +295,35 @@ h1, h2, h3, h4 {
   background-size: 256px 256px;
 }
 
-/* ─── Custom Cursor ─────────────────────────────────────────── */
-.cursor-dot,
-.cursor-ring {
+/* ─── Custom Cursor (Crosshair) ─────────────────────────────── */
+.cursor-point,
+.cursor-h,
+.cursor-v {
   position: fixed;
   top: 0;
   left: 0;
-  border-radius: 50%;
   pointer-events: none;
   transform-origin: center;
 }
 
-.cursor-dot {
-  width: 7px;
-  height: 7px;
+.cursor-point {
+  width: 4px;
+  height: 4px;
   background: var(--accent);
   z-index: 99999;
 }
 
-.cursor-ring {
-  width: 52px;
-  height: 52px;
-  border: 1.5px solid rgba(251, 70, 13, 0.45);
-  background: transparent;
+.cursor-h {
+  width: 24px;
+  height: 1px;
+  background: rgba(251, 70, 13, 0.55);
+  z-index: 99998;
+}
+
+.cursor-v {
+  width: 1px;
+  height: 24px;
+  background: rgba(251, 70, 13, 0.55);
   z-index: 99998;
 }
 
@@ -2444,7 +2452,7 @@ h1, h2, h3, h4 { letter-spacing: -0.03em; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .cursor-dot, .cursor-ring { display: none; }
+  .cursor-point, .cursor-h, .cursor-v { display: none; }
 }
 
 .dark {

@@ -52,7 +52,7 @@ export default function Preloader({ onComplete }: Props) {
       // Phase 3 (2.4s): dramatic split exit
       tl.to(topRef.current, { y: "-100%", duration: 0.9, ease: "power4.inOut" }, 2.4)
         .to(botRef.current, { y: "100%", duration: 0.9, ease: "power4.inOut" }, 2.4)
-        .call(() => { setVisible(false); onComplete(); }, [], 3.1);
+        .call(() => { setVisible(false); onComplete(); }, [], 3.35);
     }, containerRef);
 
     return () => ctx.revert();
