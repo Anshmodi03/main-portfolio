@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
-const TOTAL_FRAMES = 80;
+const SYMBOLS = ["{ }", "[ ]", "=>", "async", "const", "</>", "::"];
 
 export default function CinematicZoom() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const canvasRef  = useRef<HTMLCanvasElement>(null);
-  const labelRef   = useRef<HTMLSpanElement>(null);
-  const [loaded, setLoaded] = useState(false);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const canvasRef   = useRef<HTMLCanvasElement>(null);
+  const contentRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas  = canvasRef.current;
@@ -21,6 +20,60 @@ export default function CinematicZoom() {
 
     let W = 0;
     let H = 0;
+    let currentProgress = 0;
+
+    const draw = (progress: number) => {
+      const eased = progress * progress * (3 - 2 * progress); // smooth-step
+      const scale  = 0.55 + eased * 22; // zoom: tight grid → extreme close-up
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = "#080808";
+      ctx.fillRect(0, 0, W, H);
+
+      const gridSize  = 90;
+      const halfCols  = Math.ceil(W / 2 / gridSize) + 3;
+      const halfRows  = Math.ceil(H / 2 / gridSize) + 3;
+      const maxDim    = Math.max(W, H);
+      const fontSize  = Math.max(8, Math.min(10 * scale, 300));
+
+      ctx.font         = `${fontSize}px "Geist Mono", monospace`;
+      ctx.textAlign    = "center";
+      ctx.textBaseline = "middle";
+
+      for (let c = -halfCols; c <= halfCols; c++) {
+        for (let r = -halfRows; r <= halfRows; r++) {
+          const gx = c * gridSize;
+          const gy = r * gridSize;
+          const sx = W / 2 + gx * scale;
+          const sy = H / 2 + gy * scale;
+
+          if (sx < -200 || sx > W + 200 || sy < -200 || sy > H + 200) continue;
+
+          const dist           = Math.sqrt(gx * gx + gy * gy);
+          const normalizedDist = dist / (maxDim * 0.55);
+          const alpha          = Math.max(0, (1 - normalizedDist) * (1 - eased * 0.88));
+          if (alpha < 0.008) continue;
+
+          const brightness = Math.max(0, 1 - normalizedDist * 1.4);
+          const g          = Math.round(70 + brightness * 25);
+          ctx.fillStyle    = `rgba(251, ${g}, 13, ${alpha})`;
+
+          const sym = SYMBOLS[Math.abs(c * 7 + r * 13) % SYMBOLS.length];
+          ctx.fillText(sym, sx, sy);
+        }
+      }
+
+      // Orange radial glow burst at high progress
+      if (eased > 0.72) {
+        const glowP  = (eased - 0.72) / 0.28;
+        const radius = maxDim * 0.4 * glowP;
+        const grd    = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, radius);
+        grd.addColorStop(0, `rgba(251,70,13,${(0.28 * glowP).toFixed(3)})`);
+        grd.addColorStop(1, "transparent");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, W, H);
+      }
+    };
 
     const resize = () => {
       const parent = canvas.parentElement;
@@ -34,62 +87,36 @@ export default function CinematicZoom() {
       canvas.style.width  = `${W}px`;
       canvas.style.height = `${H}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw(currentProgress);
     };
 
     resize();
+    draw(0);
     window.addEventListener("resize", resize);
 
-    const images: HTMLImageElement[] = [];
-    let loadedCount = 0;
-    let cleanup: (() => void) | undefined;
-
-    const initScrollTrigger = () => {
-      setLoaded(true);
-      ctx.drawImage(images[0], 0, 0, W, H);
-
-      const obj = { frame: 0 };
-
-      const gsapCtx = gsap.context(() => {
-        gsap.to(obj, {
-          frame: TOTAL_FRAMES - 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            pin: true,
-            scrub: 0.5,
-            start: "top top",
-            end: "+=200%",
-            onUpdate: (self) => {
-              const idx = Math.round(obj.frame);
-              ctx.drawImage(images[idx], 0, 0, W, H);
-              if (labelRef.current) {
-                const a = Math.max(0, (self.progress - 0.65) / 0.35);
-                labelRef.current.style.opacity = a.toFixed(3);
-              }
-            },
+    const gsapCtx = gsap.context(() => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          scrub: 1.5,
+          start: "top top",
+          end: "+=200%",
+          onUpdate: (self) => {
+            currentProgress = self.progress;
+            draw(self.progress);
+            if (contentRef.current) {
+              const a = Math.max(0, (self.progress - 0.80) / 0.20);
+              contentRef.current.style.opacity = a.toFixed(3);
+            }
           },
-        });
-      }, sectionRef);
-
-      cleanup = () => {
-        gsapCtx.revert();
-        window.removeEventListener("resize", resize);
-      };
-    };
-
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = `/frames/frame-${String(i).padStart(3, "0")}.jpg`;
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === TOTAL_FRAMES) initScrollTrigger();
-      };
-      images.push(img);
-    }
+        },
+      });
+    }, sectionRef);
 
     return () => {
-      if (cleanup) cleanup();
-      else window.removeEventListener("resize", resize);
+      gsapCtx.revert();
+      window.removeEventListener("resize", resize);
     };
   }, []);
 
@@ -98,18 +125,41 @@ export default function CinematicZoom() {
       ref={sectionRef}
       className="relative bg-[var(--bg-base)] flex items-center justify-center min-h-[100dvh] overflow-hidden"
     >
-      {!loaded && (
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
-          Loading...
-        </p>
-      )}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-      <span
-        ref={labelRef}
-        className="absolute bottom-[var(--gutter)] left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--text-muted)] z-10 pointer-events-none opacity-0"
+
+      {/* End-state reveal — burns through the orange glow at 80–100% progress */}
+      <div
+        ref={contentRef}
+        className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none opacity-0"
       >
-        // Full Stack Developer
-      </span>
+        {/* Eyebrow */}
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[var(--accent)] mb-8">
+          // Full Stack Developer
+        </p>
+
+        {/* Headline */}
+        <h2 className="font-[var(--font-heading)] font-bold tracking-[-0.04em] leading-[0.92] text-center text-[clamp(52px,8vw,120px)]">
+          <span className="block text-[var(--text-primary)]">FULL STACK</span>
+          <span className="block text-[var(--accent)]">DEVELOPER</span>
+        </h2>
+
+        {/* Divider */}
+        <div className="w-16 h-px bg-[var(--accent)] mt-10 mb-10" />
+
+        {/* Stats row */}
+        <div className="flex items-center gap-8 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
+          <span>5+ Years</span>
+          <span className="text-[var(--border-strong)]">·</span>
+          <span>20+ Projects</span>
+          <span className="text-[var(--border-strong)]">·</span>
+          <span>10+ Clients</span>
+        </div>
+
+        {/* Scroll prompt */}
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--text-muted)] mt-12">
+          ↓ &nbsp;Continue
+        </p>
+      </div>
     </section>
   );
 }
