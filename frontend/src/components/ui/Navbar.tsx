@@ -89,22 +89,37 @@ export default function Navbar() {
           AM
         </a>
 
-        {/* Available for Work badge */}
-        <span className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent)] z-[1001]">
-          <span className="relative inline-flex items-center justify-center w-[6px] h-[6px]">
-            <span className="pulse-ring-accent" />
-            <span className="inline-block w-[6px] h-[6px] rounded-full bg-[var(--accent)] relative z-10" />
+        {/* Available for Work — Good Fella 3-part button */}
+        <button
+          type="button"
+          onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+          className="hidden sm:inline-flex group relative cursor-none border-none bg-transparent p-0 z-[1001]"
+          data-cursor="link"
+          aria-label="Available for Work — scroll to contact"
+        >
+          <span className="relative flex items-center gap-[6px]">
+            <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+              </svg>
+            </span>
+            <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
+              Available for Work
+            </span>
+            <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+              </svg>
+            </span>
           </span>
-          Available for Work
-        </span>
+        </button>
 
         {/* Hamburger — shown on ALL screen sizes */}
         <button
           type="button"
-          className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--accent)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
+          className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--text-primary)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
           onClick={open ? closeMenu : openMenu}
           aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open ? "true" : "false"}
         >
           {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
           <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
@@ -157,10 +172,7 @@ export default function Navbar() {
         </nav>
 
         {/* Footer bar */}
-        <div className="absolute bottom-[var(--gutter)] left-[var(--gutter)] right-[var(--gutter)] flex justify-between items-center border-t border-[rgba(255,255,255,0.08)] pt-6">
-          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
-            © 2025 Ansh Modi
-          </span>
+        <div className="absolute bottom-[var(--gutter)] left-[var(--gutter)] right-[var(--gutter)] flex justify-end items-center border-t border-[rgba(255,255,255,0.08)] pt-6">
           <div className="flex gap-5">
             <a
               href="https://github.com/Anshmodi03"
