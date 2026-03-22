@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+
+gsap.registerPlugin(ScrambleTextPlugin);
 
 interface Props {
   onComplete: () => void;
@@ -9,12 +12,12 @@ interface Props {
 
 export default function Preloader({ onComplete }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const barRef       = useRef<HTMLDivElement>(null);
+  const curtainRef   = useRef<HTMLDivElement>(null);
+  const nameRef      = useRef<HTMLDivElement>(null);
+  const dividerRef   = useRef<HTMLDivElement>(null);
+  const taglineRef   = useRef<HTMLSpanElement>(null);
   const counterRef   = useRef<HTMLSpanElement>(null);
-  const brandRef     = useRef<HTMLSpanElement>(null);
-  const topRef       = useRef<HTMLDivElement>(null);
-  const botRef       = useRef<HTMLDivElement>(null);
-  const lineRef      = useRef<HTMLDivElement>(null);
+  const barRef       = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -22,37 +25,61 @@ export default function Preloader({ onComplete }: Props) {
       const obj = { val: 0 };
       const tl  = gsap.timeline();
 
-      // Phase 1 (0–2s): bar fills + counter counts
-      tl.to(barRef.current, { scaleX: 1, duration: 2, ease: "power2.inOut", transformOrigin: "left" }, 0)
-        .to(obj, {
-          val: 100,
-          duration: 2,
-          ease: "power2.inOut",
-          onUpdate: () => {
-            if (counterRef.current) counterRef.current.textContent = String(Math.round(obj.val));
-          },
-        }, 0)
-        .fromTo(counterRef.current, { scale: 1.1 }, { scale: 1, duration: 2, ease: "power2.inOut" }, 0);
+      // Name line-mask reveal (slides up from below overflow-hidden container)
+      tl.fromTo(nameRef.current,
+        { y: 60, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, ease: "expo.out" },
+        0
+      );
 
-      // Phase 2 (1.6s): brand fades in
-      tl.fromTo(brandRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.6);
-
-      // Accent line draws across at 2.0s — just before panels split
-      tl.fromTo(lineRef.current,
+      // Accent divider draws left → right
+      tl.fromTo(dividerRef.current,
         { scaleX: 0 },
-        {
-          scaleX: 1,
-          boxShadow: "0 0 12px rgba(251,70,13,0.8), 0 0 24px rgba(251,70,13,0.4)",
-          duration: 0.4, ease: "power3.inOut",
+        { scaleX: 1, duration: 0.5, ease: "power3.inOut" },
+        0.3
+      );
+
+      // Tagline scrambles in via ScrambleText
+      tl.set(taglineRef.current, { opacity: 1 }, 0.7)
+        .to(taglineRef.current, {
+          scrambleText: { text: "// Full Stack Developer", chars: "01!@#$%", speed: 0.6 },
+          duration: 0.8,
+        }, 0.7);
+
+      // Counter counts 0 → 100%
+      tl.to(obj, {
+        val: 100,
+        duration: 2,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          if (counterRef.current)
+            counterRef.current.textContent = `${Math.round(obj.val)}%`;
         },
+      }, 0);
+
+      // Progress bar fills
+      tl.to(barRef.current, {
+        scaleX: 1,
+        duration: 2,
+        ease: "power2.inOut",
+        transformOrigin: "left",
+      }, 0);
+
+      // Content fades up just before curtain (clears the stage)
+      tl.to([nameRef.current, dividerRef.current, taglineRef.current],
+        { y: -16, opacity: 0, duration: 0.4, ease: "power2.in", stagger: 0.04 },
+        1.85
+      );
+
+      // Curtain wipes left → right — covers entire preloader
+      tl.fromTo(curtainRef.current,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.7, ease: "power4.inOut", transformOrigin: "left" },
         2.0
       );
-      tl.to(lineRef.current, { opacity: 0, duration: 0.2 }, 2.4);
 
-      // Phase 3 (2.4s): dramatic split exit
-      tl.to(topRef.current, { y: "-100%", duration: 0.9, ease: "power4.inOut" }, 2.4)
-        .to(botRef.current, { y: "100%", duration: 0.9, ease: "power4.inOut" }, 2.4)
-        .call(() => { setVisible(false); onComplete(); }, [], 3.35);
+      // Callback fires after curtain fully covers (t=2.7) — safe to remove DOM
+      tl.call(() => { setVisible(false); onComplete(); }, [], 2.75);
     }, containerRef);
 
     return () => ctx.revert();
@@ -65,30 +92,42 @@ export default function Preloader({ onComplete }: Props) {
       ref={containerRef}
       className="fixed inset-0 z-[99999] bg-[var(--bg-base)] flex items-center justify-center"
     >
-      {/* Split exit panels */}
-      <div ref={topRef} className="preloader__half preloader__half--top" />
-      <div ref={botRef} className="preloader__half preloader__half--bot" />
+      {/* Curtain exit — wipes left to right over content, then DOM is removed */}
+      <div ref={curtainRef} className="preloader__curtain" />
 
-      {/* Horizontal accent slash — draws just before panel split */}
-      <div
-        ref={lineRef}
-        className="absolute top-1/2 left-0 w-full h-[2px] bg-[var(--accent)] z-[4] scale-x-0 origin-left"
-      />
+      {/* Center content */}
+      <div className="relative z-[3] flex flex-col items-center gap-4">
+        {/* Name inside overflow-hidden line-mask */}
+        <div className="overflow-hidden pb-1">
+          <div
+            ref={nameRef}
+            className="font-[var(--font-heading)] font-bold text-[var(--text-primary)] text-[clamp(48px,6vw,88px)] leading-none tracking-[-0.03em] select-none"
+          >
+            ANSH MODI
+          </div>
+        </div>
 
-      {/* Giant counter */}
+        {/* Accent divider */}
+        <div
+          ref={dividerRef}
+          className="preloader__divider w-full h-[1px] bg-[var(--accent)] origin-left scale-x-0"
+        />
+
+        {/* Tagline — ScrambleText target */}
+        <span
+          ref={taglineRef}
+          className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-0"
+        >
+          // Full Stack Developer
+        </span>
+      </div>
+
+      {/* Counter — bottom right */}
       <span
         ref={counterRef}
-        className="relative z-[3] select-none leading-none font-bold tracking-[-0.05em] text-[var(--text-primary)] text-[clamp(80px,14vw,160px)] font-[var(--font-heading)]"
+        className="absolute bottom-[var(--gutter)] right-[var(--gutter)] z-[3] font-mono text-[11px] tracking-[0.12em] text-[var(--text-muted)] tabular-nums"
       >
-        0
-      </span>
-
-      {/* Brand label */}
-      <span
-        ref={brandRef}
-        className="absolute bottom-[var(--gutter)] left-[var(--gutter)] z-[3] font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)]"
-      >
-        Ansh Modi — Portfolio
+        0%
       </span>
 
       {/* Progress bar */}
