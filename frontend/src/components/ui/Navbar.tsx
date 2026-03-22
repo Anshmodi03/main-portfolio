@@ -75,7 +75,7 @@ export default function Navbar() {
       {/* Nav bar */}
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 w-full h-[72px] z-[1000] flex items-center justify-between px-[var(--gutter)] transition-[background,backdrop-filter,border-color] duration-500 ${
+        className={`fixed top-0 left-0 w-full h-[72px] z-[1000] grid grid-cols-3 items-center px-[var(--gutter)] transition-[background,backdrop-filter,border-color] duration-500 ${
           scrolled
             ? "bg-[var(--bg-alpha-opaque)] backdrop-blur-[16px] border-b border-[var(--border)]"
             : "bg-transparent"
@@ -89,28 +89,31 @@ export default function Navbar() {
           AM
         </a>
 
-        {/* Hamburger — shown on ALL screen sizes */}
-        <button
-          type="button"
-          className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--text-primary)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
-          onClick={open ? closeMenu : openMenu}
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
-          <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
-            <span className="nav-btn-text-inner flex flex-col gap-[2px]">
-              <span className="block h-[1em] leading-none">Menu</span>
-              <span className="block h-[1em] leading-none">Close</span>
+        {/* Hamburger — col 2, true center */}
+        <div className="flex justify-center">
+          <button
+            type="button"
+            className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--text-primary)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
+            onClick={open ? closeMenu : openMenu}
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
+            <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
+              <span className="nav-btn-text-inner flex flex-col gap-[2px]">
+                <span className="block h-[1em] leading-none">Menu</span>
+                <span className="block h-[1em] leading-none">Close</span>
+              </span>
             </span>
-          </span>
-          {/* 2-bar X icon */}
-          <span className="relative flex h-[16px] w-[22px] flex-col items-center justify-center">
-            <span className="nav-bar nav-bar-1 absolute h-[2px] w-full origin-center bg-current" />
-            <span className="nav-bar nav-bar-2 absolute h-[2px] w-full origin-center bg-current" />
-          </span>
-        </button>
+            {/* 2-bar X icon */}
+            <span className="relative flex h-[16px] w-[22px] flex-col items-center justify-center">
+              <span className="nav-bar nav-bar-1 absolute h-[2px] w-full origin-center bg-current" />
+              <span className="nav-bar nav-bar-2 absolute h-[2px] w-full origin-center bg-current" />
+            </span>
+          </button>
+        </div>
 
-        {/* Available for Work — Good Fella 3-part button */}
+        {/* Available for Work — col 3, right-aligned */}
+        <div className="flex justify-end">
         <button
           type="button"
           onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
@@ -134,6 +137,7 @@ export default function Navbar() {
             </span>
           </span>
         </button>
+        </div>
       </nav>
 
       {/* Full-screen overlay */}
