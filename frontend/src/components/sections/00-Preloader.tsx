@@ -39,8 +39,12 @@ export default function Preloader({ onComplete }: Props) {
 
       // Accent line draws across at 2.0s — just before panels split
       tl.fromTo(lineRef.current,
-        { scaleX: 0, transformOrigin: "left center" },
-        { scaleX: 1, duration: 0.4, ease: "power3.inOut" },
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          boxShadow: "0 0 12px rgba(251,70,13,0.8), 0 0 24px rgba(251,70,13,0.4)",
+          duration: 0.4, ease: "power3.inOut",
+        },
         2.0
       );
       tl.to(lineRef.current, { opacity: 0, duration: 0.2 }, 2.4);
@@ -68,7 +72,7 @@ export default function Preloader({ onComplete }: Props) {
       {/* Horizontal accent slash — draws just before panel split */}
       <div
         ref={lineRef}
-        className="absolute top-1/2 left-0 w-full h-[1px] bg-[var(--accent)] z-[2] scale-x-0"
+        className="absolute top-1/2 left-0 w-full h-[2px] bg-[var(--accent)] z-[4] scale-x-0 origin-left"
       />
 
       {/* Giant counter */}

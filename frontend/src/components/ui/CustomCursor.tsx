@@ -44,7 +44,7 @@ export default function CustomCursor() {
       if (!(e.target as HTMLElement).closest("[data-cursor]")) return;
       gsap.to(dot,  { scale: 0, duration: 0.2, ease: "power2.out" });
       gsap.to(ring, {
-        width: 72, height: 72,
+        scale: 1.385,
         borderColor: "rgba(251,70,13,0.9)",
         backgroundColor: "rgba(251,70,13,0.07)",
         duration: 0.35, ease: "power3.out",
@@ -55,8 +55,8 @@ export default function CustomCursor() {
       if (!(e.target as HTMLElement).closest("[data-cursor]")) return;
       gsap.to(dot,  { scale: 1, duration: 0.3, ease: "back.out(1.5)" });
       gsap.to(ring, {
-        width: 52, height: 52,
-        borderColor: "rgba(245,245,245,0.22)",
+        scale: 1,
+        borderColor: "rgba(251,70,13,0.45)",
         backgroundColor: "transparent",
         duration: 0.35, ease: "power3.out",
       });

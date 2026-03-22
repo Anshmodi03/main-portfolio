@@ -307,14 +307,14 @@ h1, h2, h3, h4 {
 .cursor-dot {
   width: 7px;
   height: 7px;
-  background: var(--text-primary);
+  background: var(--accent);
   z-index: 99999;
 }
 
 .cursor-ring {
   width: 52px;
   height: 52px;
-  border: 1px solid rgba(245, 245, 245, 0.22);
+  border: 1.5px solid rgba(251, 70, 13, 0.45);
   background: transparent;
   z-index: 99998;
 }
