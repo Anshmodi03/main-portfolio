@@ -208,6 +208,14 @@ body {
   animation: breathePulse 2.2s ease-out infinite;
   pointer-events: none;
 }
+.pulse-ring-accent {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  animation: breathePulse 2.2s ease-out infinite;
+  pointer-events: none;
+}
 
 
 /* ─── LaserFlow canvas ──────────────────────────────────────── */
@@ -227,17 +235,22 @@ body {
 }
 .ticker-track { animation: tickerFlow 22s linear infinite; }
 
-/* ─── Nav Hamburger Bars ────────────────────────────────────── */
-.nav-menu-btn__bar {
-  height: 1px;
-  background: var(--text-primary);
-  transition: transform 0.35s cubic-bezier(0.77,0,0.175,1), opacity 0.25s, width 0.25s;
-  transform-origin: left;
+/* ─── Nav Hamburger (good-fella 2-bar X pattern) ────────────── */
+/* Text slide: two spans stacked, parent slides to show Menu or Close */
+.nav-btn-text-inner {
+  transition: transform 300ms ease-out;
+  transform: translateY(0px);
 }
-.nav-menu-btn__bar:nth-child(2) { width: 14px; }
-.nav-open .nav-menu-btn__bar:nth-child(1) { transform: rotate(45deg) translate(0,3.5px); width: 22px; }
-.nav-open .nav-menu-btn__bar:nth-child(2) { opacity: 0; }
-.nav-open .nav-menu-btn__bar:nth-child(3) { transform: rotate(-45deg) translate(0,-3.5px); width: 22px; }
+.nav-open .nav-btn-text-inner { transform: translateY(calc(-1em - 2px)); }
+
+/* 2-bar icon: both bars centered, spread & rotate to X */
+.nav-bar {
+  transition: transform 250ms ease-out;
+}
+.nav-bar-1 { transform: rotate(0deg) translateY(-3px); }
+.nav-bar-2 { transform: rotate(0deg) translateY(3px); }
+.nav-open .nav-bar-1 { transform: rotate(45deg) translateY(0px); }
+.nav-open .nav-bar-2 { transform: rotate(-45deg) translateY(0px); }
 
 /* ─── Preloader Split Panels (GSAP-animated) ────────────────── */
 .preloader__half { position: absolute; left: 0; width: 100%; height: 50%; background: var(--bg-base); z-index: 2; }
@@ -1847,40 +1860,6 @@ h1, h2, h3, h4 { letter-spacing: -0.03em; }
 .nav-center-links li a:hover,
 .nav-center-links li button:hover { color: var(--text-primary); }
 @media (max-width: 900px) { .nav-center-links { display: none; } }
-
-.nav-menu-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: none;
-  border: none;
-  cursor: none;
-  z-index: 1001;
-}
-.nav-menu-btn__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-  transition: color 0.2s;
-}
-.nav-menu-btn__bars {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 22px;
-}
-.nav-menu-btn__bar {
-  height: 1px;
-  background: var(--text-primary);
-  transition: transform 0.35s var(--ease-dramatic), opacity 0.25s, width 0.25s;
-  transform-origin: left;
-}
-.nav-menu-btn__bar:nth-child(2) { width: 14px; }
-.nav-menu-btn.open .nav-menu-btn__bar:nth-child(1) { transform: rotate(45deg) translate(0, 3.5px); width: 22px; }
-.nav-menu-btn.open .nav-menu-btn__bar:nth-child(2) { opacity: 0; }
-.nav-menu-btn.open .nav-menu-btn__bar:nth-child(3) { transform: rotate(-45deg) translate(0, -3.5px); width: 22px; }
 
 /* ─── Full-Screen Nav Overlay ───────────────────────────────── */
 .nav-overlay {

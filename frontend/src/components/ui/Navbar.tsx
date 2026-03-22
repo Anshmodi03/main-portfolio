@@ -14,8 +14,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const navRef       = useRef<HTMLElement>(null);
-  const overlayRef   = useRef<HTMLDivElement>(null);
-  const menuLabelRef = useRef<HTMLSpanElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
 
@@ -53,11 +52,6 @@ export default function Navbar() {
       { y: "80%", opacity: 0 },
       { y: "0%", opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.07, delay: 0.3 }
     );
-    gsap.to(menuLabelRef.current, {
-      duration: 0.4,
-      scrambleText: { text: "Close", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.8 },
-      ease: "none",
-    });
   };
 
   const closeMenu = () => {
@@ -68,12 +62,6 @@ export default function Navbar() {
       ease: "power4.inOut",
       delay: 0.1,
       onComplete: () => setOpen(false),
-    });
-    gsap.to(menuLabelRef.current, {
-      duration: 0.4,
-      scrambleText: { text: "Menu", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.8 },
-      ease: "none",
-      delay: 0.15,
     });
   };
 
@@ -102,10 +90,10 @@ export default function Navbar() {
         </a>
 
         {/* Available for Work badge */}
-        <span className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#22c55e] z-[1001]">
+        <span className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--accent)] z-[1001]">
           <span className="relative inline-flex items-center justify-center w-[6px] h-[6px]">
-            <span className="pulse-ring" />
-            <span className="inline-block w-[6px] h-[6px] rounded-full bg-[#22c55e] relative z-10" />
+            <span className="pulse-ring-accent" />
+            <span className="inline-block w-[6px] h-[6px] rounded-full bg-[var(--accent)] relative z-10" />
           </span>
           Available for Work
         </span>
@@ -113,20 +101,22 @@ export default function Navbar() {
         {/* Hamburger — shown on ALL screen sizes */}
         <button
           type="button"
-          className={`flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] ${open ? "nav-open" : ""}`}
+          className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--accent)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
           onClick={open ? closeMenu : openMenu}
           aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open ? "true" : "false"}
         >
-          <span className="flex flex-col gap-[5px] w-[22px]">
-            <span className="nav-menu-btn__bar w-full" />
-            <span className="nav-menu-btn__bar" />
-            <span className="nav-menu-btn__bar w-full" />
+          {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
+          <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
+            <span className="nav-btn-text-inner flex flex-col gap-[2px]">
+              <span className="block h-[1em] leading-none">Menu</span>
+              <span className="block h-[1em] leading-none">Close</span>
+            </span>
           </span>
-          <span
-            ref={menuLabelRef}
-            className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--text-primary)]"
-          >
-            Menu
+          {/* 2-bar X icon */}
+          <span className="relative flex h-[16px] w-[22px] flex-col items-center justify-center">
+            <span className="nav-bar nav-bar-1 absolute h-[2px] w-full origin-center bg-current" />
+            <span className="nav-bar nav-bar-2 absolute h-[2px] w-full origin-center bg-current" />
           </span>
         </button>
       </nav>
