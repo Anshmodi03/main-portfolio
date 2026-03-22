@@ -51,7 +51,7 @@ export default function CinematicZoom() {
 
           const dist           = Math.sqrt(gx * gx + gy * gy);
           const normalizedDist = dist / (maxDim * 0.55);
-          const alpha          = Math.max(0, (1 - normalizedDist) * (1 - eased * 0.88));
+          const alpha          = Math.max(0, (1 - normalizedDist) * (1 - Math.min(1, eased * 1.15)));
           if (alpha < 0.008) continue;
 
           const brightness = Math.max(0, 1 - normalizedDist * 1.4);
@@ -106,8 +106,10 @@ export default function CinematicZoom() {
             currentProgress = self.progress;
             draw(self.progress);
             if (contentRef.current) {
-              const a = Math.max(0, (self.progress - 0.80) / 0.20);
-              contentRef.current.style.opacity = a.toFixed(3);
+              const t = Math.max(0, Math.min(1, (self.progress - 0.90) / 0.10));
+              const a = 1 - Math.pow(1 - t, 2); // quadratic ease-out
+              contentRef.current.style.opacity   = a.toFixed(3);
+              contentRef.current.style.transform = `translateY(${((1 - a) * 24).toFixed(1)}px)`;
             }
           },
         },
