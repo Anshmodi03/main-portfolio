@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
-
-gsap.registerPlugin(ScrambleTextPlugin);
 
 interface Props {
   onComplete: () => void;
@@ -22,6 +19,11 @@ export default function Preloader({ onComplete }: Props) {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      if (
+        !nameRef.current || !dividerRef.current || !taglineRef.current ||
+        !curtainRef.current || !barRef.current
+      ) return;
+
       const obj = { val: 0 };
       const tl  = gsap.timeline();
 
