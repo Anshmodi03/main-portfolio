@@ -299,52 +299,24 @@ h1, h2, h3, h4 {
   position: fixed;
   top: 0;
   left: 0;
-  pointer-events: none;
-  z-index: 10000;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s;
+  pointer-events: none;
+  transform-origin: center;
 }
 
 .cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(251,70,13,0.8);
+  width: 7px;
+  height: 7px;
+  background: var(--text-primary);
+  z-index: 99999;
 }
 
 .cursor-ring {
-  width: 48px;
-  height: 48px;
-  border: 1.5px solid var(--accent);
-  mix-blend-mode: difference;
-  transition: width 0.25s var(--ease-out),
-              height 0.25s var(--ease-out),
-              border-color 0.25s;
-}
-
-.cursor-ring.hovering {
-  width: 80px;
-  height: 80px;
-  box-shadow: 0 0 20px rgba(251,70,13,0.25);
-}
-
-.cursor-ring.clicking {
-  width: 36px;
-  height: 36px;
-}
-
-.cursor-ring__text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(245, 245, 245, 0.22);
+  background: transparent;
+  z-index: 99998;
 }
 
 /* ─── Scroll Progress Bar ───────────────────────────────────── */
@@ -2422,17 +2394,6 @@ h1, h2, h3, h4 { letter-spacing: -0.03em; }
 }
 .footer__link:hover { color: var(--text-primary); }
 
-/* ─── Cursor Upgrade ────────────────────────────────────────── */
-.cursor-ring {
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--accent);
-  mix-blend-mode: normal;
-  transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out), opacity 0.2s;
-}
-.cursor-ring.hovering { width: 88px; height: 88px; border-color: var(--text-primary); }
-.cursor-ring.clicking { width: 40px; height: 40px; }
-.cursor-dot { background: var(--text-primary); width: 5px; height: 5px; }
 .reveal-line { overflow: hidden; }
 @media (max-width: 768px) {
   .about-grid { grid-template-columns: 1fr; }

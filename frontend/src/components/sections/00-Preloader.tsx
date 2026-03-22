@@ -14,6 +14,7 @@ export default function Preloader({ onComplete }: Props) {
   const brandRef     = useRef<HTMLSpanElement>(null);
   const topRef       = useRef<HTMLDivElement>(null);
   const botRef       = useRef<HTMLDivElement>(null);
+  const lineRef      = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -36,6 +37,14 @@ export default function Preloader({ onComplete }: Props) {
       // Phase 2 (1.6s): brand fades in
       tl.fromTo(brandRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.6);
 
+      // Accent line draws across at 2.0s — just before panels split
+      tl.fromTo(lineRef.current,
+        { scaleX: 0, transformOrigin: "left center" },
+        { scaleX: 1, duration: 0.4, ease: "power3.inOut" },
+        2.0
+      );
+      tl.to(lineRef.current, { opacity: 0, duration: 0.2 }, 2.4);
+
       // Phase 3 (2.4s): dramatic split exit
       tl.to(topRef.current, { y: "-100%", duration: 0.9, ease: "power4.inOut" }, 2.4)
         .to(botRef.current, { y: "100%", duration: 0.9, ease: "power4.inOut" }, 2.4)
@@ -55,6 +64,12 @@ export default function Preloader({ onComplete }: Props) {
       {/* Split exit panels */}
       <div ref={topRef} className="preloader__half preloader__half--top" />
       <div ref={botRef} className="preloader__half preloader__half--bot" />
+
+      {/* Horizontal accent slash — draws just before panel split */}
+      <div
+        ref={lineRef}
+        className="absolute top-1/2 left-0 w-full h-[1px] bg-[var(--accent)] z-[2] scale-x-0"
+      />
 
       {/* Giant counter */}
       <span

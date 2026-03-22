@@ -145,6 +145,13 @@ export default function Hero({ ready }: Props) {
         0
       );
 
+      // Orbs materialize — atmospheric glow builds from nothing
+      tl.fromTo([orb1Ref.current, orb2Ref.current, orb3Ref.current],
+        { opacity: 0 },
+        { opacity: 1, duration: 3, ease: "power2.out", stagger: 0.6 },
+        0
+      );
+
       // Location badge slides in
       tl.fromTo(locationRef.current,
         { x: -16, opacity: 0 },
@@ -170,8 +177,8 @@ export default function Hero({ ready }: Props) {
       // ── Good Fella line-mask reveal ──
       const lineInners = headingRef.current?.querySelectorAll(".hero-line-inner") ?? [];
       tl.fromTo(lineInners,
-        { y: "110%", rotateX: 12 },
-        { y: "0%", rotateX: 0, duration: 1.1, ease: "expo.out", stagger: 0.1 },
+        { y: "110%", rotateX: 12, filter: "blur(4px)" },
+        { y: "0%", rotateX: 0, filter: "blur(0px)", duration: 1.1, ease: "expo.out", stagger: 0.1 },
         0.5
       );
 
@@ -270,9 +277,9 @@ export default function Hero({ ready }: Props) {
           className="hero-dot-grid absolute inset-0 z-0 opacity-0"
         />
         {/* Glow orbs */}
-        <div ref={orb1Ref} className="hero-orb-1 absolute -top-[15%] -left-[5%] w-[900px] h-[900px]" />
-        <div ref={orb2Ref} className="hero-orb-2 absolute bottom-[-10%] right-[-8%] w-[700px] h-[700px]" />
-        <div ref={orb3Ref} className="hero-orb-3 absolute top-[30%] left-[30%] w-[500px] h-[500px]" />
+        <div ref={orb1Ref} className="hero-orb-1 absolute -top-[15%] -left-[5%] w-[900px] h-[900px] opacity-0" />
+        <div ref={orb2Ref} className="hero-orb-2 absolute bottom-[-10%] right-[-8%] w-[700px] h-[700px] opacity-0" />
+        <div ref={orb3Ref} className="hero-orb-3 absolute top-[30%] left-[30%] w-[500px] h-[500px] opacity-0" />
       </div>
 
       {/* ── 2-Column grid ── */}
