@@ -89,6 +89,27 @@ export default function Navbar() {
           AM
         </a>
 
+        {/* Hamburger — shown on ALL screen sizes */}
+        <button
+          type="button"
+          className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--text-primary)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
+          onClick={open ? closeMenu : openMenu}
+          aria-label={open ? "Close menu" : "Open menu"}
+        >
+          {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
+          <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
+            <span className="nav-btn-text-inner flex flex-col gap-[2px]">
+              <span className="block h-[1em] leading-none">Menu</span>
+              <span className="block h-[1em] leading-none">Close</span>
+            </span>
+          </span>
+          {/* 2-bar X icon */}
+          <span className="relative flex h-[16px] w-[22px] flex-col items-center justify-center">
+            <span className="nav-bar nav-bar-1 absolute h-[2px] w-full origin-center bg-current" />
+            <span className="nav-bar nav-bar-2 absolute h-[2px] w-full origin-center bg-current" />
+          </span>
+        </button>
+
         {/* Available for Work — Good Fella 3-part button */}
         <button
           type="button"
@@ -111,27 +132,6 @@ export default function Navbar() {
                 <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
               </svg>
             </span>
-          </span>
-        </button>
-
-        {/* Hamburger — shown on ALL screen sizes */}
-        <button
-          type="button"
-          className={`group flex items-center gap-2.5 bg-transparent border-none cursor-none z-[1001] text-[var(--text-primary)] transition-opacity duration-300 hover:opacity-70 ${open ? "nav-open" : ""}`}
-          onClick={open ? closeMenu : openMenu}
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
-          <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
-            <span className="nav-btn-text-inner flex flex-col gap-[2px]">
-              <span className="block h-[1em] leading-none">Menu</span>
-              <span className="block h-[1em] leading-none">Close</span>
-            </span>
-          </span>
-          {/* 2-bar X icon */}
-          <span className="relative flex h-[16px] w-[22px] flex-col items-center justify-center">
-            <span className="nav-bar nav-bar-1 absolute h-[2px] w-full origin-center bg-current" />
-            <span className="nav-bar nav-bar-2 absolute h-[2px] w-full origin-center bg-current" />
           </span>
         </button>
       </nav>
