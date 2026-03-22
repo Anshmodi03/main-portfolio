@@ -9,7 +9,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      // unsafe-eval required for Three.js/GSAP shader compilation
+      // unsafe-eval required for GSAP runtime animation engine
       // unsafe-inline required for GSAP runtime style injection
       "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
@@ -23,7 +23,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["three"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
