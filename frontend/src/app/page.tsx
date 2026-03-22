@@ -10,6 +10,7 @@ import Marquee from "@/components/sections/02-Marquee";
 import About from "@/components/sections/03-About";
 import Skills from "@/components/sections/04-Skills";
 import Projects from "@/components/sections/05-Projects";
+import CinematicZoom from "@/components/sections/10-Cinematic";
 import Experience from "@/components/sections/06-Experience";
 import Exploring from "@/components/sections/07-Exploring";
 import Process from "@/components/sections/08-Process";
@@ -43,6 +44,7 @@ export default function Home() {
           <About />
           <Skills />
           <Projects />
+          <CinematicZoom />
           <Experience />
           <Exploring />
           <Process />

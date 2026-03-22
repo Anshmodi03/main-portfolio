@@ -45,6 +45,19 @@ export default function Projects() {
         { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.08,
           scrollTrigger: { trigger: otherRef.current, start: "top 80%" } }
       );
+
+      // GSAP image hover zoom — image scales, card border stays fixed
+      const wraps = sectionRef.current?.querySelectorAll(".project-image-wrap");
+      wraps?.forEach((wrap) => {
+        const img = wrap.querySelector("img");
+        if (!img) return;
+        wrap.addEventListener("mouseenter", () =>
+          gsap.to(img, { scale: 1.1, duration: 0.7, ease: "power2.out" })
+        );
+        wrap.addEventListener("mouseleave", () =>
+          gsap.to(img, { scale: 1.0, duration: 0.6, ease: "power2.out" })
+        );
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -80,7 +93,7 @@ export default function Projects() {
               <div className="grid grid-cols-1 md:grid-cols-2">
 
                 {/* Image panel */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-raised)]">
+                <div className="project-image-wrap relative aspect-[4/3] overflow-hidden bg-[var(--bg-raised)]">
                   <span className="absolute top-4 left-4 z-10 font-mono text-[11px] uppercase tracking-[0.15em] text-white/40">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -89,7 +102,7 @@ export default function Projects() {
                       src={project.image}
                       alt={project.name}
                       fill
-                      className="object-cover transition-transform duration-700 hover:scale-105"
+                      className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   )}
