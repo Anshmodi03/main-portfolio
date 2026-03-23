@@ -16,6 +16,8 @@ import GitHubStats from "@/components/sections/11-GitHubStats";
 import Exploring from "@/components/sections/07-Exploring";
 import Process from "@/components/sections/08-Process";
 import Contact from "@/components/sections/09-Contact";
+import Services from "@/components/sections/12-Services";
+import WorkTogether from "@/components/sections/13-WorkTogether";
 
 export default function Home() {
   const [preloaderDone, setPreloaderDone] = useState(false);
@@ -50,11 +52,13 @@ export default function Home() {
           <Marquee />
           <About />
           <Skills />
+          <Services />
           <Projects />
           <Experience />
           <GitHubStats />
           <Exploring />
           <Process />
+          <WorkTogether />
           <Contact />
         </main>
         <Footer />

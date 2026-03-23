@@ -402,3 +402,48 @@ export const skillsByCategory = {
   backend: skills.filter((s) => s.category === "Backend"),
   tools: skills.filter((s) => s.category === "Tools"),
 };
+
+// ─── Services ────────────────────────────────────────────────────────────────
+
+export interface Service {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  tags: string[];
+}
+
+export const services: Service[] = [
+  {
+    id: "s1",
+    number: "01",
+    title: "Full Stack Web Apps",
+    description:
+      "End-to-end MERN stack applications — from auth and REST APIs to React frontends. Built for scale, speed, and real-world production.",
+    tags: ["React", "Node.js", "MongoDB", "Express"],
+  },
+  {
+    id: "s2",
+    number: "02",
+    title: "UI / UX Engineering",
+    description:
+      "Pixel-perfect interfaces with GSAP animations, smooth scroll, and premium micro-interactions that make users stay.",
+    tags: ["Next.js", "TailwindCSS", "GSAP", "Lenis"],
+  },
+  {
+    id: "s3",
+    number: "03",
+    title: "API & Backend Systems",
+    description:
+      "RESTful APIs, JWT auth, rate-limiting, and real-time WebSocket features. Clean architecture with Express 5 and TypeScript.",
+    tags: ["Express.js", "TypeScript", "JWT", "REST"],
+  },
+  {
+    id: "s4",
+    number: "04",
+    title: "Performance & Optimization",
+    description:
+      "Auditing, optimizing, and deploying fast web experiences. Core Web Vitals, bundle splitting, and edge deployments.",
+    tags: ["TypeScript", "Vercel", "Web Vitals", "SEO"],
+  },
+];
