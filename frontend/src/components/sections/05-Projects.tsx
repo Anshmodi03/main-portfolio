@@ -6,8 +6,7 @@ import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import SpinButton from "@/components/ui/SpinButton";
 import { projects, otherProjects } from "@/lib/data";
 
 export default function Projects() {
@@ -247,32 +246,22 @@ export default function Projects() {
                   </div>
                   <div className="card-animate flex gap-3 flex-wrap">
                     {project.github && (
-                      <a
+                      <SpinButton
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={cn(
-                          buttonVariants({ variant: "outline", size: "sm" }),
-                          "rounded-none border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--text-primary)] font-mono text-[10px] uppercase tracking-[0.12em] no-underline"
-                        )}
-                        data-cursor="link"
-                      >
-                        GitHub ↗
-                      </a>
+                        label="GitHub"
+                        variant="light"
+                      />
                     )}
                     {project.live && (
-                      <a
+                      <SpinButton
                         href={project.live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={cn(
-                          buttonVariants({ size: "sm" }),
-                          "rounded-none bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-mono text-[10px] uppercase tracking-[0.12em] no-underline"
-                        )}
-                        data-cursor="link"
-                      >
-                        Live ↗
-                      </a>
+                        label="Live"
+                        variant="accent"
+                      />
                     )}
                   </div>
                 </CardContent>
@@ -324,18 +313,12 @@ export default function Projects() {
         </div>
 
         <div className="mt-16 flex justify-center">
-          <a
+          <SpinButton
             href="https://github.com/Anshmodi03"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "rounded-none border-[var(--border-strong)] text-[var(--text-primary)] hover:bg-[var(--accent)] hover:border-[var(--accent)] hover:text-white font-mono text-[11px] uppercase tracking-[0.14em] h-12 px-8 transition-colors duration-200 no-underline"
-            )}
-            data-cursor="link"
-          >
-            Explore All on GitHub →
-          </a>
+            label="Explore All on GitHub"
+          />
         </div>
       </div>
 

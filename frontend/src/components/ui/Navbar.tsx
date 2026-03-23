@@ -14,7 +14,8 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const navRef       = useRef<HTMLElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const overlayRef   = useRef<HTMLDivElement>(null);
+  const logoTextRef  = useRef<HTMLSpanElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
 
@@ -81,12 +82,28 @@ export default function Navbar() {
             : "bg-transparent"
         }`}
       >
+        {/* Logo */}
         <a
           href="#"
-          className="font-mono text-[13px] uppercase tracking-[0.12em] text-[var(--text-primary)] no-underline z-[1001]"
+          className="group relative inline-flex items-start gap-[5px] no-underline z-[1001]"
           data-cursor="link"
+          onMouseEnter={() => {
+            if (!logoTextRef.current) return;
+            gsap.to(logoTextRef.current, {
+              duration: 0.55,
+              scrambleText: { text: "AM", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.7 },
+              ease: "none",
+            });
+          }}
         >
-          AM
+          <span
+            ref={logoTextRef}
+            className="font-[var(--font-heading)] text-[22px] font-bold tracking-[-0.05em] leading-none text-[var(--text-primary)]"
+          >
+            AM
+          </span>
+          {/* Accent square — top-right dot */}
+          <span className="mt-[3px] w-[6px] h-[6px] bg-[var(--accent)] flex-shrink-0 transition-transform duration-300 group-hover:scale-125" />
         </a>
 
         {/* Hamburger — col 2, true center */}

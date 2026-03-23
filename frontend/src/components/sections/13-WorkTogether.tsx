@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import SpinButton from "@/components/ui/SpinButton";
 import LaserFlow from "@/components/ui/LaserFlow";
 import { personal } from "@/lib/data";
 
@@ -102,16 +101,12 @@ export default function WorkTogether() {
             Have a project in mind? I&apos;d love to help you build it.
           </p>
 
-          <a
+          <SpinButton
             href="#contact"
-            className={cn(
-              buttonVariants({ size: "lg" }),
-              "cta-animate rounded-none bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-mono text-[11px] uppercase tracking-[0.14em] h-14 px-10 transition-colors duration-200 no-underline"
-            )}
-            data-cursor="link"
-          >
-            Start a Project →
-          </a>
+            label="Start a Project"
+            ariaLabel="Start a Project"
+            className="cta-animate"
+          />
 
           <p className="cta-animate font-mono text-[11px] tracking-[0.1em] text-[var(--text-muted)] opacity-60">
             or email{" "}

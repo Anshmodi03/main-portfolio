@@ -9,7 +9,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import SpinButton from "@/components/ui/SpinButton";
 import { Separator } from "@/components/ui/separator";
 import { personal } from "@/lib/data";
 
@@ -162,13 +162,12 @@ export default function Contact() {
             )}
           </div>
 
-          <Button
+          <SpinButton
             type="submit"
+            label={submitting ? "Sending..." : "Send Message"}
             disabled={submitting}
-            className="w-full rounded-none bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-mono text-[11px] uppercase tracking-[0.14em] h-12 transition-colors duration-200"
-          >
-            {submitting ? "Sending..." : "SEND MESSAGE →"}
-          </Button>
+            className="w-full justify-center"
+          />
         </form>
 
         {/* Social column */}
