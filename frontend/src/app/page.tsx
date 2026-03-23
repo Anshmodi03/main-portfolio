@@ -12,6 +12,7 @@ import About from "@/components/sections/03-About";
 import Skills from "@/components/sections/04-Skills";
 import Projects from "@/components/sections/05-Projects";
 import Experience from "@/components/sections/06-Experience";
+import GitHubStats from "@/components/sections/11-GitHubStats";
 import Exploring from "@/components/sections/07-Exploring";
 import Process from "@/components/sections/08-Process";
 import Contact from "@/components/sections/09-Contact";
@@ -51,6 +52,7 @@ export default function Home() {
           <Skills />
           <Projects />
           <Experience />
+          <GitHubStats />
           <Exploring />
           <Process />
           <Contact />

@@ -191,6 +191,25 @@ body {
 /* Terminal cursor blink start state — GSAP drives opacity */
 .terminal-cursor { opacity: 0; }
 
+/* Terminal SVG corner brackets — overflows box by 1px on each side */
+.terminal__corners-svg {
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+}
+
+/* Terminal output pane custom scrollbar */
+.terminal__output::-webkit-scrollbar        { width: 4px; }
+.terminal__output::-webkit-scrollbar-track  { background: transparent; }
+.terminal__output::-webkit-scrollbar-thumb  { background-color: var(--border); }
+
+/* Terminal blinking cursor */
+@keyframes terminal-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.terminal__cursor { animation: terminal-blink 1s step-end infinite; }
+
 /* Dot grid overlay */
 .hero-dot-grid {
   background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
