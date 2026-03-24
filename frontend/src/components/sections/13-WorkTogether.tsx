@@ -5,7 +5,6 @@ import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import SpinButton from "@/components/ui/SpinButton";
 import LaserFlow from "@/components/ui/LaserFlow";
-import { personal } from "@/lib/data";
 
 export default function WorkTogether() {
   const sectionRef  = useRef<HTMLElement>(null);
@@ -108,16 +107,6 @@ export default function WorkTogether() {
             className="cta-animate"
           />
 
-          <p className="cta-animate font-mono text-[11px] tracking-[0.1em] text-[var(--text-muted)] opacity-60">
-            or email{" "}
-            <a
-              href={`mailto:${personal.email}`}
-              className="underline underline-offset-2 hover:text-[var(--accent)] transition-colors duration-150"
-              data-cursor="link"
-            >
-              {personal.email}
-            </a>
-          </p>
         </div>
       </div>
     </section>
