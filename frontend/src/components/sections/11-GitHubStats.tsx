@@ -96,7 +96,12 @@ export default function GitHubStats() {
         }
       );
 
-      // Language bars scaleX fill
+      // Language bars scaleX fill — set width per-bar via gsap.set (no inline styles)
+      live.languages.forEach((lang, i) => {
+        const bar = barFillRefs.current[i];
+        if (!bar) return;
+        gsap.set(bar, { width: `${lang.pct}%` });
+      });
       const fills = barFillRefs.current.filter(Boolean) as HTMLDivElement[];
       if (fills.length) {
         gsap.fromTo(
@@ -220,7 +225,6 @@ export default function GitHubStats() {
                 <div
                   ref={(el) => { barFillRefs.current[i] = el; }}
                   className="absolute inset-y-0 left-0 bg-[var(--accent)]"
-                  style={{ width: `${lang.pct}%` }}
                 />
               </div>
               <span className="font-mono text-[11px] tabular-nums text-[var(--text-muted)] w-8 text-right flex-shrink-0">
