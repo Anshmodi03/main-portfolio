@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { Badge } from "@/components/ui/badge";
 
 const NAV_LINKS = [
   { label: "Work",       href: "#projects"   },
@@ -17,10 +16,6 @@ export default function Navbar() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const logoTextRef = useRef<HTMLSpanElement>(null);
 
-  // Overlay sub-element refs
-  const eyebrowRef  = useRef<HTMLSpanElement>(null);
-  const metaRef     = useRef<HTMLDivElement>(null);
-  const topSepRef   = useRef<HTMLDivElement>(null);
   const footerRef   = useRef<HTMLDivElement>(null);
 
   // Per-link refs (arrays)
@@ -65,35 +60,7 @@ export default function Navbar() {
       ease: "power4.inOut",
     });
 
-    // 2. Eyebrow ScrambleText
-    if (eyebrowRef.current) {
-      gsap.to(eyebrowRef.current, {
-        delay: 0.35,
-        duration: 0.7,
-        scrambleText: { text: "// Navigation", chars: "01!#?$", speed: 0.7 },
-        ease: "none",
-      });
-    }
-
-    // 3. Meta panel slide in from right
-    if (metaRef.current) {
-      gsap.fromTo(
-        metaRef.current,
-        { x: 20, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5, ease: "power3.out", delay: 0.4 }
-      );
-    }
-
-    // 4. Top accent separator draw
-    if (topSepRef.current) {
-      gsap.fromTo(
-        topSepRef.current,
-        { scaleX: 0, transformOrigin: "left center" },
-        { scaleX: 1, duration: 0.6, ease: "power3.out", delay: 0.4 }
-      );
-    }
-
-    // 5. Link inner mask reveal
+    // 2. Link inner mask reveal
     const inners = linkInnerRefs.current.filter(Boolean);
     if (inners.length) {
       gsap.fromTo(
@@ -152,7 +119,6 @@ export default function Navbar() {
     const fadeOut = [
       ...linkIndexRefs.current.filter(Boolean),
       ...linkArrowRefs.current.filter(Boolean),
-      metaRef.current,
       footerRef.current,
     ].filter(Boolean);
     if (fadeOut.length) {
@@ -263,35 +229,6 @@ export default function Navbar() {
           open ? "pointer-events-auto" : "pointer-events-none"
         }`}
       >
-        {/* ── Top row: eyebrow + meta ── */}
-        <div className="flex items-start justify-between mb-[clamp(12px,2vh,24px)]">
-          <span
-            ref={eyebrowRef}
-            className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)]"
-          >
-            // Navigation
-          </span>
-          <div ref={metaRef} className="flex flex-col items-end gap-2 opacity-0">
-            <Badge
-              variant="outline"
-              className="rounded-none font-mono text-[9px] tracking-[0.12em] bg-transparent border-[var(--accent)] text-[var(--accent)]"
-            >
-              Available for Work
-            </Badge>
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--border-strong)]">
-              India · Remote
-            </span>
-          </div>
-        </div>
-
-        {/* Top accent separator draw */}
-        <div className="relative h-px bg-[var(--border)] overflow-hidden mb-[clamp(8px,1.5vh,20px)]">
-          <div
-            ref={topSepRef}
-            className="absolute inset-0 bg-[var(--accent)] origin-left scale-x-0"
-          />
-        </div>
-
         {/* ── Nav links ── */}
         <nav className="flex-1 flex flex-col justify-center">
           {NAV_LINKS.map((link, i) => (
