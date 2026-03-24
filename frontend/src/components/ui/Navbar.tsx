@@ -2,28 +2,37 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+import { Badge } from "@/components/ui/badge";
 
 const NAV_LINKS = [
-  { label: "Work",       href: "#projects" },
-  { label: "About",      href: "#about" },
-  { label: "Skills",     href: "#skills" },
+  { label: "Work",       href: "#projects"   },
+  { label: "About",      href: "#about"      },
+  { label: "Skills",     href: "#skills"     },
   { label: "Experience", href: "#experience" },
-  { label: "Contact",    href: "#contact" },
+  { label: "Contact",    href: "#contact"    },
 ];
 
 export default function Navbar() {
-  const navRef       = useRef<HTMLElement>(null);
-  const overlayRef   = useRef<HTMLDivElement>(null);
-  const logoTextRef  = useRef<HTMLSpanElement>(null);
+  const navRef     = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const logoTextRef = useRef<HTMLSpanElement>(null);
+
+  // Overlay sub-element refs
+  const eyebrowRef  = useRef<HTMLSpanElement>(null);
+  const metaRef     = useRef<HTMLDivElement>(null);
+  const topSepRef   = useRef<HTMLDivElement>(null);
+  const footerRef   = useRef<HTMLDivElement>(null);
+
+  // Per-link refs (arrays)
+  const linkInnerRefs   = useRef<(HTMLSpanElement | null)[]>([]);
+  const linkIndexRefs   = useRef<(HTMLSpanElement | null)[]>([]);
+  const linkArrowRefs   = useRef<(HTMLSpanElement | null)[]>([]);
+  const linkDividerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrambleTextPlugin);
-  }, []);
-
-  /* Entrance — delayed until after preloader (~3.1s) */
+  /* ── Entrance ── */
   useEffect(() => {
     gsap.fromTo(
       navRef.current,
@@ -32,31 +41,124 @@ export default function Navbar() {
     );
   }, []);
 
-  /* Scroll backdrop */
+  /* ── Scroll backdrop ── */
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  /* Body scroll-lock */
+  /* ── Body scroll-lock ── */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  // ── openMenu: 9-layer GSAP timeline ─────────────────────────────────────
   const openMenu = () => {
     setOpen(true);
-    gsap.to(overlayRef.current, { clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power4.inOut" });
-    gsap.fromTo(
-      ".nav-overlay-link",
-      { y: "80%", opacity: 0 },
-      { y: "0%", opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.07, delay: 0.3 }
-    );
+
+    // 1. Overlay clip-path wipe
+    gsap.to(overlayRef.current, {
+      clipPath: "inset(0 0 0% 0)",
+      duration: 0.7,
+      ease: "power4.inOut",
+    });
+
+    // 2. Eyebrow ScrambleText
+    if (eyebrowRef.current) {
+      gsap.to(eyebrowRef.current, {
+        delay: 0.35,
+        duration: 0.7,
+        scrambleText: { text: "// Navigation", chars: "01!#?$", speed: 0.7 },
+        ease: "none",
+      });
+    }
+
+    // 3. Meta panel slide in from right
+    if (metaRef.current) {
+      gsap.fromTo(
+        metaRef.current,
+        { x: 20, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.5, ease: "power3.out", delay: 0.4 }
+      );
+    }
+
+    // 4. Top accent separator draw
+    if (topSepRef.current) {
+      gsap.fromTo(
+        topSepRef.current,
+        { scaleX: 0, transformOrigin: "left center" },
+        { scaleX: 1, duration: 0.6, ease: "power3.out", delay: 0.4 }
+      );
+    }
+
+    // 5. Link inner mask reveal
+    const inners = linkInnerRefs.current.filter(Boolean);
+    if (inners.length) {
+      gsap.fromTo(
+        inners,
+        { y: "110%" },
+        { y: "0%", duration: 0.7, ease: "power3.out", stagger: 0.08, delay: 0.45 }
+      );
+    }
+
+    // 6. Index numbers
+    const indices = linkIndexRefs.current.filter(Boolean);
+    if (indices.length) {
+      gsap.fromTo(
+        indices,
+        { x: -10, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.08, delay: 0.5 }
+      );
+    }
+
+    // 7. Arrows
+    const arrows = linkArrowRefs.current.filter(Boolean);
+    if (arrows.length) {
+      gsap.fromTo(
+        arrows,
+        { x: -8, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.09, delay: 0.55 }
+      );
+    }
+
+    // 8. Per-link thin dividers scaleX draw
+    const dividers = linkDividerRefs.current.filter(Boolean);
+    if (dividers.length) {
+      gsap.fromTo(
+        dividers,
+        { scaleX: 0, transformOrigin: "left center" },
+        { scaleX: 1, duration: 0.6, ease: "power3.out", stagger: 0.07, delay: 0.5 }
+      );
+    }
+
+    // 9. Footer block
+    if (footerRef.current) {
+      gsap.fromTo(
+        footerRef.current,
+        { y: 16, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", delay: 0.65 }
+      );
+    }
   };
 
+  // ── closeMenu: collapse + wipe ───────────────────────────────────────────
   const closeMenu = () => {
-    gsap.to(".nav-overlay-link", { y: "80%", opacity: 0, duration: 0.2, ease: "power3.in" });
+    const inners = linkInnerRefs.current.filter(Boolean);
+    if (inners.length) {
+      gsap.to(inners, { y: "110%", duration: 0.2, ease: "power3.in" });
+    }
+    const fadeOut = [
+      ...linkIndexRefs.current.filter(Boolean),
+      ...linkArrowRefs.current.filter(Boolean),
+      metaRef.current,
+      footerRef.current,
+    ].filter(Boolean);
+    if (fadeOut.length) {
+      gsap.to(fadeOut, { opacity: 0, duration: 0.15 });
+    }
+
     gsap.to(overlayRef.current, {
       clipPath: "inset(0 0 100% 0)",
       duration: 0.55,
@@ -73,7 +175,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Nav bar */}
+      {/* ── Nav bar ── */}
       <nav
         ref={navRef}
         className={`fixed top-0 left-0 w-full h-[72px] z-[1000] grid grid-cols-3 items-center px-[var(--gutter)] transition-[background,backdrop-filter,border-color] duration-500 ${
@@ -102,7 +204,6 @@ export default function Navbar() {
           >
             AM
           </span>
-          {/* Accent square — top-right dot */}
           <span className="mt-[3px] w-[6px] h-[6px] bg-[var(--accent)] flex-shrink-0 transition-transform duration-300 group-hover:scale-125" />
         </a>
 
@@ -114,14 +215,12 @@ export default function Navbar() {
             onClick={open ? closeMenu : openMenu}
             aria-label={open ? "Close menu" : "Open menu"}
           >
-            {/* Sliding Menu/Close text — CSS transition via nav-btn-text-inner */}
             <span className="relative h-[1em] w-[3.5em] overflow-hidden font-mono text-[11px] uppercase tracking-[0.14em]">
               <span className="nav-btn-text-inner flex flex-col gap-[2px]">
                 <span className="block h-[1em] leading-none">Menu</span>
                 <span className="block h-[1em] leading-none">Close</span>
               </span>
             </span>
-            {/* 2-bar X icon */}
             <span className="relative flex h-[16px] w-[22px] flex-col items-center justify-center">
               <span className="nav-bar nav-bar-1 absolute h-[2px] w-full origin-center bg-current" />
               <span className="nav-bar nav-bar-2 absolute h-[2px] w-full origin-center bg-current" />
@@ -129,91 +228,170 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Available for Work — col 3, right-aligned */}
+        {/* Available for Work — col 3, right */}
         <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-          className="hidden sm:inline-flex group relative cursor-none border-none bg-transparent p-0 z-[1001]"
-          data-cursor="link"
-          aria-label="Available for Work — scroll to contact"
-        >
-          <span className="relative flex items-center gap-[6px]">
-            <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-              </svg>
+          <button
+            type="button"
+            onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+            className="hidden sm:inline-flex group relative cursor-none border-none bg-transparent p-0 z-[1001]"
+            data-cursor="link"
+            aria-label="Available for Work — scroll to contact"
+          >
+            <span className="relative flex items-center gap-[6px]">
+              <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                </svg>
+              </span>
+              <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
+                Available for Work
+              </span>
+              <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                </svg>
+              </span>
             </span>
-            <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
-              Available for Work
-            </span>
-            <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-              </svg>
-            </span>
-          </span>
-        </button>
+          </button>
         </div>
       </nav>
 
-      {/* Full-screen overlay */}
+      {/* ── Full-screen overlay ── */}
       <div
         ref={overlayRef}
-        className={`nav-overlay-init fixed inset-0 z-[999] flex flex-col justify-center px-[var(--gutter)] pt-[calc(var(--nav-h)+40px)] pb-[var(--gutter)] overflow-hidden bg-[var(--overlay-bg)] ${
+        className={`nav-overlay-init fixed inset-0 z-[999] flex flex-col px-[var(--gutter)] pt-[calc(var(--nav-h)+clamp(20px,3vh,40px))] pb-[clamp(20px,3vh,40px)] bg-[var(--overlay-bg)] ${
           open ? "pointer-events-auto" : "pointer-events-none"
         }`}
       >
-        {/* Giant nav links */}
-        <nav className="flex flex-col gap-1">
+        {/* ── Top row: eyebrow + meta ── */}
+        <div className="flex items-start justify-between mb-[clamp(12px,2vh,24px)]">
+          <span
+            ref={eyebrowRef}
+            className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)]"
+          >
+            // Navigation
+          </span>
+          <div ref={metaRef} className="flex flex-col items-end gap-2 opacity-0">
+            <Badge
+              variant="outline"
+              className="rounded-none font-mono text-[9px] tracking-[0.12em] bg-transparent border-[var(--accent)] text-[var(--accent)]"
+            >
+              Available for Work
+            </Badge>
+            <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--border-strong)]">
+              India · Remote
+            </span>
+          </div>
+        </div>
+
+        {/* Top accent separator draw */}
+        <div className="relative h-px bg-[var(--border)] overflow-hidden mb-[clamp(8px,1.5vh,20px)]">
+          <div
+            ref={topSepRef}
+            className="absolute inset-0 bg-[var(--accent)] origin-left scale-x-0"
+          />
+        </div>
+
+        {/* ── Nav links ── */}
+        <nav className="flex-1 flex flex-col justify-center">
           {NAV_LINKS.map((link, i) => (
-            <div key={link.href} className="overflow-hidden">
+            <div key={link.href}>
+              {/* Per-link thin divider */}
+              <div className="relative h-px overflow-hidden">
+                <div
+                  ref={(el) => { linkDividerRefs.current[i] = el; }}
+                  className="absolute inset-0 bg-[var(--border)] origin-left scale-x-0"
+                />
+              </div>
+
               <button
                 type="button"
-                className="nav-overlay-link block w-full text-left text-[clamp(48px,9vw,110px)] font-bold tracking-[-0.04em] leading-[1.0] text-[var(--text-muted)] bg-transparent border-none hover:text-[var(--text-primary)] transition-colors duration-200 cursor-none font-[var(--font-heading)]"
+                className="group w-full flex items-center gap-[clamp(12px,2vw,28px)] py-[clamp(6px,1vh,14px)] bg-transparent border-none cursor-none text-left text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200"
                 onClick={() => navigate(link.href)}
                 data-cursor="link"
                 onMouseEnter={(e) => {
                   const labelEl = e.currentTarget.querySelector(".nav-link-label") as HTMLElement;
-                  if (!labelEl) return;
-                  gsap.to(labelEl, {
-                    duration: 0.5,
-                    scrambleText: { text: link.label, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.6 },
-                    ease: "none",
-                  });
+                  if (labelEl) {
+                    gsap.to(labelEl, {
+                      duration: 0.5,
+                      scrambleText: { text: link.label, chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", speed: 0.6 },
+                      ease: "none",
+                    });
+                  }
+                  const arrowEl = linkArrowRefs.current[i];
+                  if (arrowEl) gsap.to(arrowEl, { x: 6, duration: 0.25, ease: "power2.out" });
+                }}
+                onMouseLeave={() => {
+                  const arrowEl = linkArrowRefs.current[i];
+                  if (arrowEl) gsap.to(arrowEl, { x: 0, duration: 0.2, ease: "power2.in" });
                 }}
               >
-                <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-[var(--accent)] mr-4 align-middle">
+                {/* Index */}
+                <span
+                  ref={(el) => { linkIndexRefs.current[i] = el; }}
+                  className="font-mono text-[11px] tracking-[0.1em] uppercase text-[var(--accent)] shrink-0 opacity-0"
+                >
                   0{i + 1}
                 </span>
-                <span className="nav-link-label">{link.label}</span>
+
+                {/* Masked label */}
+                <div className="overflow-hidden flex-1 min-w-0">
+                  <span
+                    ref={(el) => { linkInnerRefs.current[i] = el; }}
+                    className="block text-[clamp(38px,6.5vw,96px)] font-bold tracking-[-0.04em] leading-[1.05] font-[var(--font-heading)]"
+                  >
+                    <span className="nav-link-label">{link.label}</span>
+                  </span>
+                </div>
+
+                {/* Arrow */}
+                <span
+                  ref={(el) => { linkArrowRefs.current[i] = el; }}
+                  className="font-mono text-[clamp(14px,1.8vw,22px)] text-[var(--accent)] shrink-0 opacity-0"
+                >
+                  ↗
+                </span>
               </button>
             </div>
           ))}
+
+          {/* Final divider after last link */}
+          <div className="relative h-px overflow-hidden">
+            <div
+              ref={(el) => { linkDividerRefs.current[NAV_LINKS.length] = el; }}
+              className="absolute inset-0 bg-[var(--border)] origin-left scale-x-0"
+            />
+          </div>
         </nav>
 
-        {/* Footer bar */}
-        <div className="absolute bottom-[var(--gutter)] left-[var(--gutter)] right-[var(--gutter)] flex justify-end items-center border-t border-[rgba(255,255,255,0.08)] pt-6">
+        {/* ── Footer ── */}
+        <div
+          ref={footerRef}
+          className="opacity-0 pt-[clamp(12px,2vh,20px)] border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between flex-wrap gap-4"
+        >
           <div className="flex gap-5">
             <a
               href="https://github.com/Anshmodi03"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] hover:text-[var(--text-primary)] no-underline transition-colors"
+              className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] hover:text-[var(--text-primary)] no-underline transition-colors duration-200"
               data-cursor="link"
             >
               GitHub
             </a>
             <a
-              href="https://linkedin.com/in/ansh-modi-"
+              href="https://www.linkedin.com/in/ansh-modi-/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] hover:text-[var(--text-primary)] no-underline transition-colors"
+              className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] hover:text-[var(--text-primary)] no-underline transition-colors duration-200"
               data-cursor="link"
             >
               LinkedIn
             </a>
           </div>
+          <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--border-strong)]">
+            Ansh Modi · Full Stack Developer
+          </span>
         </div>
       </div>
     </>
