@@ -1289,10 +1289,6 @@ h1, h2, h3, h4 {
 }
 @keyframes spin { to { rotate: 1turn; } }
 
-/* ─── Experience GSAP start states ──────────────────────────── */
-.exp-card { opacity: 0; }
-.exp-dot  { transform: scale(0); opacity: 0; }
-
 /* ─── Exploring Section ──────────────────────────────────────── */
 .exploring-section {
   padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);

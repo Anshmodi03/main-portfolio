@@ -13,7 +13,15 @@ export default function Experience() {
   const watermarkRef = useRef<HTMLSpanElement>(null);
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const headingRef   = useRef<HTMLHeadingElement>(null);
-  const lineRef      = useRef<SVGPathElement>(null);
+
+  // Per-entry refs
+  const lineRefs    = useRef<(HTMLDivElement | null)[]>([]);
+  const svgLineRefs = useRef<(SVGPathElement | null)[]>([]);
+  const indexRefs   = useRef<(HTMLSpanElement | null)[]>([]);
+  const companyRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+  const pingRefs    = useRef<(HTMLSpanElement | null)[]>([]);
+  // Flat array: 2 entries × 2 metrics = 4 slots
+  const metricRefs  = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -53,49 +61,138 @@ export default function Experience() {
         );
       }
 
-      // ── 4. DrawSVG timeline line scrub ────────────────────────────────────
-      if (lineRef.current) {
-        gsap.from(lineRef.current, {
-          drawSVG: "0%",
-          duration: 2,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 60%",
-            end: "bottom 30%",
-            scrub: 1,
-          },
-        });
-      }
+      // ── Per-entry animations ────────────────────────────────────────────────
+      experiences.forEach((exp, i) => {
+        const entryEl = sectionRef.current?.querySelector(`[data-exp-id="${exp.id}"]`);
+        if (!entryEl) return;
 
-      // ── 5. Cards stagger from alternating sides ───────────────────────────
-      const cards = Array.from(
-        sectionRef.current?.querySelectorAll(".exp-card") ?? []
-      );
-      cards.forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          { x: i % 2 === 0 ? -60 : 60, opacity: 0 },
-          {
-            x: 0, opacity: 1, duration: 0.8, ease: "power3.out",
-            scrollTrigger: { trigger: card, start: "top 85%", once: true },
-          }
-        );
-      });
+        // 4. Top accent line scaleX 0→1
+        const lineEl = lineRefs.current[i];
+        if (lineEl) {
+          gsap.fromTo(
+            lineEl,
+            { scaleX: 0, transformOrigin: "left center" },
+            {
+              scaleX: 1, duration: 1.0, ease: "power3.out",
+              scrollTrigger: { trigger: entryEl, start: "top 82%", once: true },
+            }
+          );
+        }
 
-      // ── 6. Timeline dots pop in ───────────────────────────────────────────
-      const dots = Array.from(
-        sectionRef.current?.querySelectorAll(".exp-dot") ?? []
-      );
-      dots.forEach((dot) => {
-        gsap.fromTo(
-          dot,
-          { scale: 0, opacity: 0 },
-          {
-            scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)",
-            scrollTrigger: { trigger: dot, start: "top 85%", once: true },
-          }
-        );
+        // 5. DrawSVG vertical line
+        const svgLine = svgLineRefs.current[i];
+        if (svgLine) {
+          gsap.from(svgLine, {
+            drawSVG: "0%",
+            duration: 1.5,
+            ease: "power2.out",
+            scrollTrigger: { trigger: entryEl, start: "top 78%", once: true },
+          });
+        }
+
+        // 6. Index ScrambleText
+        const indexEl = indexRefs.current[i];
+        if (indexEl) {
+          gsap.to(indexEl, {
+            duration: 0.6,
+            scrambleText: {
+              text: String(i + 1).padStart(2, "0"),
+              chars: "0123456789",
+              speed: 0.5,
+            },
+            scrollTrigger: { trigger: entryEl, start: "top 80%", once: true },
+          });
+        }
+
+        // 7. Company name SplitText chars
+        const companyEl = companyRefs.current[i];
+        if (companyEl) {
+          const companySplit = new SplitText(companyEl, { type: "chars,words" });
+          gsap.fromTo(
+            companySplit.chars,
+            { y: 64, opacity: 0 },
+            {
+              y: 0, opacity: 1, duration: 0.6, ease: "dramatic", stagger: 0.015,
+              scrollTrigger: { trigger: entryEl, start: "top 80%", once: true },
+              onComplete: () => companySplit.revert(),
+            }
+          );
+        }
+
+        // 8. Content stagger (role eyebrow, duration/location, description)
+        const animateEls = Array.from(entryEl.querySelectorAll(".exp-animate"));
+        if (animateEls.length) {
+          gsap.fromTo(
+            animateEls,
+            { y: 28, opacity: 0 },
+            {
+              y: 0, opacity: 1, duration: 0.65, ease: "power3.out", stagger: 0.07,
+              scrollTrigger: { trigger: entryEl, start: "top 78%", once: true },
+            }
+          );
+        }
+
+        // 9. Achievement items stagger from left
+        const achievements = Array.from(entryEl.querySelectorAll(".exp-achievement"));
+        if (achievements.length) {
+          gsap.fromTo(
+            achievements,
+            { x: -24, opacity: 0 },
+            {
+              x: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.06,
+              scrollTrigger: { trigger: achievements[0], start: "top 82%", once: true },
+            }
+          );
+        }
+
+        // 10. Metric counters
+        if (exp.metrics) {
+          exp.metrics.forEach((m, mi) => {
+            const metricEl = metricRefs.current[i * 2 + mi];
+            if (!metricEl) return;
+            // Parse numeric value and suffix (e.g. "30%" → 30, "%")
+            const match = m.value.match(/^(\d+(?:\.\d+)?)(.*)$/);
+            if (!match) return;
+            const target  = parseFloat(match[1]);
+            const suffix  = match[2] ?? "";
+            const obj     = { val: 0 };
+            gsap.to(obj, {
+              val: target,
+              duration: 1.8,
+              ease: "power2.out",
+              scrollTrigger: { trigger: entryEl, start: "top 72%", once: true },
+              onUpdate: () => {
+                if (metricEl) metricEl.textContent = Math.round(obj.val) + suffix;
+              },
+            });
+          });
+        }
+
+        // 11. Tech badge row stagger
+        const badges = Array.from(entryEl.querySelectorAll(".exp-badge"));
+        if (badges.length) {
+          gsap.fromTo(
+            badges,
+            { y: 12, opacity: 0 },
+            {
+              y: 0, opacity: 1, duration: 0.45, ease: "power3.out", stagger: 0.04,
+              scrollTrigger: { trigger: badges[0] as Element, start: "top 88%", once: true },
+            }
+          );
+        }
+
+        // 12. Status pulse dot (for "Current" entries)
+        const pingEl = pingRefs.current[i];
+        if (pingEl && exp.status === "Current") {
+          gsap.to(pingEl, {
+            scale: 2.4,
+            opacity: 0,
+            duration: 1.4,
+            ease: "power2.out",
+            repeat: -1,
+            repeatDelay: 0.3,
+          });
+        }
       });
 
     }, sectionRef);
@@ -136,112 +233,171 @@ export default function Experience() {
 
         <Separator className="bg-[var(--border)] mb-[clamp(48px,6vh,80px)]" />
 
-        {/* ── Timeline ── */}
-        <div className="relative">
-          {/* DrawSVG center line — hidden on mobile */}
-          <svg
-            aria-hidden="true"
-            className="absolute left-1/2 top-0 h-full w-0.5 overflow-visible hidden md:block pointer-events-none -translate-x-1/2"
-          >
-            <path
-              ref={lineRef}
-              d="M 1 0 L 1 3000"
-              stroke="var(--accent)"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-            />
-          </svg>
+        {/* ── Entries ── */}
+        <div>
+          {experiences.map((exp, i) => (
+            <div
+              key={exp.id}
+              data-exp-id={exp.id}
+              className="relative border-b border-[var(--border)] pb-[clamp(48px,7vh,96px)] mb-[clamp(48px,7vh,96px)] last:border-b-0 last:mb-0"
+            >
+              {/* Top accent line draws in */}
+              <div className="relative h-px bg-[var(--border)] overflow-hidden mb-10 md:mb-14">
+                <div
+                  ref={(el) => { lineRefs.current[i] = el; }}
+                  className="absolute inset-0 bg-[var(--accent)] origin-left"
+                />
+              </div>
 
-          <div className="flex flex-col">
-            {experiences.map((exp, i) => (
-              <div
-                key={exp.company}
-                className="exp-card grid md:grid-cols-[1fr_40px_1fr] grid-cols-[40px_1fr]"
-              >
-                {/* Left slot */}
-                {i % 2 === 0 ? (
-                  <ExpContent exp={exp} align="right" />
-                ) : (
-                  <div className="hidden md:block" />
-                )}
-
-                {/* Center dot */}
-                <div className="flex justify-center pt-6">
-                  <div className="exp-dot w-3.5 h-3.5 rounded-full bg-[var(--accent)] border-2 border-[var(--bg-base)] shadow-[0_0_16px_rgba(251,70,13,0.5)]" />
+              <div className="grid grid-cols-[clamp(40px,5vw,72px)_1fr] gap-6 md:gap-12">
+                {/* ── Left: index + DrawSVG vertical line ── */}
+                <div className="relative flex flex-col items-center gap-3 pt-1">
+                  <span
+                    ref={(el) => { indexRefs.current[i] = el; }}
+                    className="font-mono text-[clamp(13px,1.1vw,17px)] text-[var(--text-muted)] tabular-nums select-none"
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {/* DrawSVG vertical decorative line */}
+                  <div className="flex-1 w-px relative overflow-hidden">
+                    <svg
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full overflow-visible"
+                      preserveAspectRatio="none"
+                    >
+                      <path
+                        ref={(el) => { svgLineRefs.current[i] = el; }}
+                        d="M 1 0 L 1 2000"
+                        stroke="var(--border)"
+                        strokeWidth="1"
+                        fill="none"
+                      />
+                    </svg>
+                  </div>
                 </div>
 
-                {/* Right slot */}
-                {i % 2 !== 0 ? (
-                  <ExpContent exp={exp} align="left" />
-                ) : (
-                  <div className="hidden md:block" />
-                )}
+                {/* ── Right: content ── */}
+                <div>
+                  {/* Company + status + type row */}
+                  <div className="flex flex-wrap items-baseline gap-3 mb-4">
+                    <h3
+                      ref={(el) => { companyRefs.current[i] = el; }}
+                      className="font-[var(--font-heading)] text-[clamp(28px,4vw,56px)] font-bold tracking-[-0.03em] leading-[1.05] text-[var(--text-primary)]"
+                    >
+                      {exp.company}
+                    </h3>
+
+                    {exp.status === "Current" && (
+                      <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--accent)]">
+                        <span
+                          ref={(el) => { pingRefs.current[i] = el; }}
+                          className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] inline-block"
+                        />
+                        Active
+                      </span>
+                    )}
+
+                    <Badge
+                      variant="outline"
+                      className="rounded-none font-mono text-[10px] tracking-[0.10em] border-[var(--border)] text-[var(--text-muted)] bg-transparent"
+                    >
+                      {exp.type}
+                    </Badge>
+                  </div>
+
+                  {/* Role eyebrow */}
+                  <p className="exp-animate font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)] mb-4">
+                    {exp.role}
+                  </p>
+
+                  {/* Duration · location */}
+                  <div className="exp-animate flex flex-wrap items-center gap-3 mb-7">
+                    <span className="font-mono text-[11px] text-[var(--text-muted)] uppercase tracking-[0.12em]">
+                      {exp.duration}
+                    </span>
+                    <span className="text-[var(--border)] text-[10px]">◆</span>
+                    <span className="font-mono text-[11px] text-[var(--text-muted)] uppercase tracking-[0.12em]">
+                      {exp.location}
+                    </span>
+                    <span className="text-[var(--border)] text-[10px]">◆</span>
+                    <span className="font-mono text-[11px] text-[var(--text-muted)] uppercase tracking-[0.12em]">
+                      {exp.status}
+                    </span>
+                  </div>
+
+                  {/* Description */}
+                  <p className="exp-animate text-[14px] text-[var(--text-muted)] leading-[1.7] max-w-2xl mb-7">
+                    {exp.description}
+                  </p>
+
+                  {/* Achievements */}
+                  <ul className="mb-8 flex flex-col gap-2.5">
+                    {exp.achievements.map((a) => (
+                      <li
+                        key={a}
+                        className="exp-achievement flex gap-3 text-[13px] text-[var(--text-muted)] leading-relaxed"
+                      >
+                        <span className="text-[var(--accent)] mt-[2px] shrink-0 select-none">↳</span>
+                        {a}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Metrics */}
+                  {exp.metrics && exp.metrics.length > 0 && (
+                    <div className="exp-animate flex flex-wrap gap-4 mb-8">
+                      {exp.metrics.map((m, mi) => (
+                        <div
+                          key={m.label}
+                          className="border border-[var(--border)] px-5 py-4 flex flex-col gap-1.5 min-w-[130px]"
+                        >
+                          <span
+                            ref={(el) => { metricRefs.current[i * 2 + mi] = el; }}
+                            className="font-[var(--font-heading)] text-[clamp(24px,2.5vw,36px)] font-bold tabular-nums text-[var(--text-primary)] leading-none"
+                          >
+                            0
+                          </span>
+                          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--text-muted)] leading-tight">
+                            {m.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Tech badges */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {exp.tech.map((t) => (
+                      <Badge
+                        key={t}
+                        variant="outline"
+                        className="exp-badge rounded-none font-mono text-[10px] tracking-[0.08em] border-[var(--border)] text-[var(--text-muted)] bg-transparent hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors duration-200 cursor-default"
+                      >
+                        {t}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── LinkedIn CTA ── */}
+        <div className="mt-[clamp(32px,4vh,64px)]">
+          <a
+            href="https://www.linkedin.com/in/anshmodi03/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors duration-200 no-underline group"
+            data-cursor="link"
+          >
+            <span className="w-8 h-px bg-[var(--border)] group-hover:bg-[var(--accent)] transition-colors duration-200" />
+            View LinkedIn Profile
+            <span className="group-hover:translate-x-1 transition-transform duration-200">↗</span>
+          </a>
         </div>
       </div>
     </section>
-  );
-}
-
-function ExpContent({
-  exp,
-  align,
-}: {
-  exp: (typeof experiences)[0];
-  align: "left" | "right";
-}) {
-  return (
-    <div
-      className={`bg-[var(--bg-base)] border border-[var(--border)] p-6 mb-8 md:mb-12 ${
-        align === "right" ? "md:mr-6" : "md:ml-6"
-      }`}
-    >
-      {/* Role + duration */}
-      <div className="flex justify-between items-start flex-wrap gap-2 mb-2">
-        <h3 className="font-[var(--font-heading)] text-[clamp(16px,1.4vw,20px)] font-bold text-[var(--text-primary)] m-0">
-          {exp.role}
-        </h3>
-        <span className="font-mono text-[10px] text-[var(--accent)] tracking-[0.08em] shrink-0">
-          {exp.duration}
-        </span>
-      </div>
-
-      {/* Company */}
-      <p className="font-mono text-[12px] text-[var(--accent)] tracking-[0.06em] mb-3">
-        {exp.company}
-      </p>
-
-      {/* Description */}
-      <p className="text-[13px] text-[var(--text-muted)] leading-relaxed mb-4">
-        {exp.description}
-      </p>
-
-      {/* Achievements */}
-      {exp.achievements && (
-        <ul className="mb-4 pl-0 list-none">
-          {exp.achievements.map((a) => (
-            <li key={a} className="text-[13px] text-[var(--text-muted)] leading-relaxed mb-1.5">
-              <span className="text-[var(--accent)]">↳ </span>{a}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Tech badges */}
-      <div className="flex flex-wrap gap-1.5">
-        {exp.tech.map((t) => (
-          <Badge
-            key={t}
-            variant="outline"
-            className="rounded-none font-mono text-[10px] tracking-[0.08em] border-[var(--border)] text-[var(--text-muted)] bg-transparent"
-          >
-            {t}
-          </Badge>
-        ))}
-      </div>
-    </div>
   );
 }
