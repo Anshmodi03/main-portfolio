@@ -9,7 +9,6 @@ import Counter from "@/components/ui/Counter";
 import SpinButton from "@/components/ui/SpinButton";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function About() {
   const sectionRef   = useRef<HTMLElement>(null);
@@ -18,11 +17,8 @@ export default function About() {
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const h2Ref        = useRef<HTMLHeadingElement>(null);
   const quoteRef     = useRef<HTMLParagraphElement>(null);
-  const statsRef     = useRef<HTMLDivElement>(null);
   const contentRef   = useRef<HTMLDivElement>(null);
   const pingRef      = useRef<HTMLSpanElement>(null);
-  const borderRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const cardRefs   = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -82,43 +78,7 @@ export default function About() {
         }
       );
 
-      // ── 6. Stat border lines draw in per card ─────────────────────────────
-      borderRefs.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(
-          el,
-          { scaleX: 0, transformOrigin: "left center" },
-          {
-            scaleX: 1, duration: 0.9, ease: "power3.out",
-            delay: i * 0.1,
-            scrollTrigger: { trigger: el, start: "top 88%", once: true },
-          }
-        );
-      });
-
-      // ── 7. Stat items stagger fade-up ─────────────────────────────────────
-      gsap.fromTo(
-        statsRef.current?.querySelectorAll(".about-stat-item") ?? [],
-        { y: 48, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.75, ease: "power3.out", stagger: 0.15,
-          scrollTrigger: { trigger: statsRef.current, start: "top 80%" },
-        }
-      );
-
-      // ── 8. Stats column parallax (drifts slower than content) ─────────────
-      gsap.to(statsRef.current, {
-        y: -60,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 2,
-        },
-      });
-
-      // ── 9. Availability pulse dot ──────────────────────────────────────────
+      // ── 6. Availability pulse dot ──────────────────────────────────────────
       if (pingRef.current) {
         gsap.to(pingRef.current, {
           scale: 2.4,
@@ -130,7 +90,7 @@ export default function About() {
         });
       }
 
-      // ── 11. Content elements fade-up ──────────────────────────────────────
+      // ── 7. Content elements fade-up ───────────────────────────────────────
       gsap.fromTo(
         contentRef.current?.querySelectorAll(".about-animate") ?? [],
         { y: 32, opacity: 0 },
@@ -139,17 +99,6 @@ export default function About() {
           scrollTrigger: { trigger: contentRef.current, start: "top 78%" },
         }
       );
-
-      // ── 12. Card hover lift ────────────────────────────────────────────────
-      cardRefs.current.forEach((card) => {
-        if (!card) return;
-        card.addEventListener("mouseenter", () =>
-          gsap.to(card, { y: -5, duration: 0.3, ease: "power2.out" })
-        );
-        card.addEventListener("mouseleave", () =>
-          gsap.to(card, { y: 0, duration: 0.4, ease: "power3.out" })
-        );
-      });
 
     }, sectionRef);
 
@@ -215,65 +164,13 @@ export default function About() {
         </p>
       </div>
 
-<Separator className="bg-[var(--border)] mb-16 relative z-10" />
+      <Separator className="bg-[var(--border)] mb-16 relative z-10" />
 
       {/* ── Zone 3: Main Grid ── */}
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-[clamp(48px,6vw,120px)] items-start">
+      <div ref={contentRef} className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-[clamp(48px,6vw,120px)] items-start">
 
-        {/* ── Stats column ── */}
-        <div ref={statsRef} className="flex flex-col gap-4">
-          {stats.map((stat, i) => (
-            <Card
-              key={stat.label}
-              ref={(el) => { cardRefs.current[i] = el as HTMLDivElement | null; }}
-              className="about-stat-item rounded-none border-[var(--border)] bg-[var(--bg-surface)] cursor-default"
-            >
-              <CardContent className="p-6">
-                {/* Animated top border line */}
-                <div className="relative h-px bg-[var(--border)] mb-5 overflow-hidden">
-                  <div
-                    ref={(el) => { borderRefs.current[i] = el; }}
-                    className="absolute inset-0 bg-[var(--accent)] scale-x-0 origin-left"
-                  />
-                </div>
-
-                <div className="text-[clamp(48px,5.5vw,80px)] font-bold tracking-[-0.05em] leading-none text-[var(--text-primary)] font-[var(--font-heading)]">
-                  <Counter
-                    to={stat.value}
-                    suffix={stat.suffix}
-                    display={(stat as { display?: string }).display}
-                    duration={2000}
-                  />
-                </div>
-
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--text-muted)] mt-3">
-                  {stat.label}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-
-          {/* Availability badge */}
-          <div className="pt-2">
-            <Badge
-              variant="outline"
-              className="rounded-none border-[#22c55e]/40 bg-transparent font-mono text-[10px] tracking-[0.12em] text-[#22c55e] px-3 py-2 flex items-center gap-2.5 w-fit"
-            >
-              <span className="relative flex h-2 w-2 flex-shrink-0">
-                <span
-                  ref={pingRef}
-                  className="absolute inset-0 rounded-full bg-[#22c55e]"
-                />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#22c55e]" />
-              </span>
-              Available for Work · Remote
-            </Badge>
-          </div>
-        </div>
-
-        {/* ── Content column ── */}
-        <div ref={contentRef}>
-
+        {/* ── Left: Content column ── */}
+        <div>
           <p className="about-animate text-base leading-[1.8] text-[var(--text-muted)] max-w-[560px] mb-5">
             {personal.bioLong}
           </p>
@@ -312,8 +209,72 @@ export default function About() {
               variant="light"
             />
           </div>
+
+          {/* All 4 stats — unified mini format */}
+          <div className="about-animate grid grid-cols-2 sm:grid-cols-4 mt-10 border-t border-[var(--border)]">
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className={`pt-5 pr-4 ${i < stats.length - 1 ? "border-r border-[var(--border)]" : ""}`}
+              >
+                <div className="text-[clamp(26px,2.8vw,40px)] font-bold tracking-[-0.04em] leading-none text-[var(--text-primary)] font-[var(--font-heading)]">
+                  <Counter
+                    to={stat.value}
+                    suffix={stat.suffix}
+                    display={(stat as { display?: string }).display}
+                    duration={2000}
+                  />
+                </div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--text-muted)] mt-2">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
+        {/* ── Right: Sidebar ── */}
+        <div className="flex flex-col gap-6 lg:pt-2">
+
+          {/* Availability */}
+          <div className="about-animate">
+            <Badge
+              variant="outline"
+              className="rounded-none border-[#22c55e]/40 bg-transparent font-mono text-[10px] tracking-[0.12em] text-[#22c55e] px-3 py-2 flex items-center gap-2.5 w-fit"
+            >
+              <span className="relative flex h-2 w-2 flex-shrink-0">
+                <span
+                  ref={pingRef}
+                  className="absolute inset-0 rounded-full bg-[#22c55e]"
+                />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#22c55e]" />
+              </span>
+              Available for Work · Remote
+            </Badge>
+          </div>
+
+          <Separator className="bg-[var(--border)]" />
+
+          {/* Info block */}
+          <div className="about-animate flex flex-col gap-4">
+            {[
+              { key: "Location", value: personal.location },
+              { key: "Since",    value: "2023" },
+              { key: "Role",     value: personal.role },
+              { key: "Stack",    value: "MERN", accent: true },
+            ].map(({ key, value, accent }) => (
+              <div key={key} className="flex items-center justify-between border-b border-[var(--border)] pb-4 last:border-b-0 last:pb-0">
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  {key}
+                </span>
+                <span className={`font-mono text-[10px] uppercase tracking-[0.12em] ${accent ? "text-[var(--accent)]" : "text-[var(--text-primary)]"}`}>
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
+
+        </div>
       </div>
     </section>
   );
