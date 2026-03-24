@@ -14,11 +14,10 @@ const LEVEL_SCALE: Record<string, number> = {
   Learning:     0.45,
 };
 
-// Pre-compute bar ref offsets per category
 const CATEGORIES = [
-  { key: "frontend", label: "Frontend",  skills: skillsByCategory.frontend, offset: 0 },
-  { key: "backend",  label: "Backend",   skills: skillsByCategory.backend,  offset: skillsByCategory.frontend.length },
-  { key: "tools",    label: "Tools",     skills: skillsByCategory.tools,    offset: skillsByCategory.frontend.length + skillsByCategory.backend.length },
+  { key: "frontend", label: "Frontend",  skills: skillsByCategory.frontend,  offset: 0 },
+  { key: "backend",  label: "Backend",   skills: skillsByCategory.backend,   offset: skillsByCategory.frontend.length },
+  { key: "tools",    label: "Tools",     skills: skillsByCategory.tools,     offset: skillsByCategory.frontend.length + skillsByCategory.backend.length },
 ] as const;
 
 export default function Skills() {
@@ -26,6 +25,7 @@ export default function Skills() {
   const watermarkRef = useRef<HTMLSpanElement>(null);
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const h2Ref        = useRef<HTMLHeadingElement>(null);
+  const topLineRef   = useRef<HTMLDivElement>(null);
   const catLineRefs  = useRef<(HTMLDivElement | null)[]>([]);
   const barFillRefs  = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -67,21 +67,47 @@ export default function Skills() {
         );
       }
 
-      // ── 4. Category accent lines draw in ──────────────────────────────────
-      catLineRefs.current.forEach((el, i) => {
-        if (!el) return;
+      // ── 4. Top separator line draw ─────────────────────────────────────────
+      if (topLineRef.current) {
         gsap.fromTo(
-          el,
+          topLineRef.current,
           { scaleX: 0, transformOrigin: "left center" },
           {
-            scaleX: 1, duration: 0.8, ease: "power3.out",
-            delay: i * 0.12,
-            scrollTrigger: { trigger: el, start: "top 80%", once: true },
+            scaleX: 1, duration: 1.2, ease: "power3.out",
+            scrollTrigger: { trigger: topLineRef.current, start: "top 80%", once: true },
           }
         );
+      }
+
+      // ── 5. Category labels stagger ────────────────────────────────────────
+      CATEGORIES.forEach((cat, ci) => {
+        const label = sectionRef.current?.querySelector(`.skill-cat-${cat.key}`);
+        if (label) {
+          gsap.fromTo(
+            label,
+            { y: 20, opacity: 0 },
+            {
+              y: 0, opacity: 1, duration: 0.6, ease: "power3.out",
+              scrollTrigger: { trigger: label, start: "top 80%", once: true },
+            }
+          );
+        }
+
+        // Category accent underline draws in
+        const catLine = catLineRefs.current[ci];
+        if (catLine) {
+          gsap.fromTo(
+            catLine,
+            { scaleX: 0, transformOrigin: "left center" },
+            {
+              scaleX: 1, duration: 0.8, ease: "power3.out",
+              scrollTrigger: { trigger: catLine, start: "top 80%", once: true },
+            }
+          );
+        }
       });
 
-      // ── 5. Skill rows stagger per category ────────────────────────────────
+      // ── 6. Skill rows stagger per category ────────────────────────────────
       CATEGORIES.forEach((cat) => {
         const rows = Array.from(
           sectionRef.current?.querySelectorAll(`.skill-row-${cat.key}`) ?? []
@@ -89,15 +115,15 @@ export default function Skills() {
         if (!rows.length) return;
         gsap.fromTo(
           rows,
-          { y: 24, opacity: 0 },
+          { y: 32, opacity: 0 },
           {
-            y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.06,
-            scrollTrigger: { trigger: rows[0], start: "top 78%" },
+            y: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.07,
+            scrollTrigger: { trigger: rows[0], start: "top 78%", once: true },
           }
         );
       });
 
-      // ── 6. Progress bars draw to level width on scroll ────────────────────
+      // ── 7. Progress bars draw to level width on scroll ────────────────────
       CATEGORIES.forEach((cat) => {
         cat.skills.forEach((skill, si) => {
           const flatIdx = cat.offset + si;
@@ -117,7 +143,7 @@ export default function Skills() {
         });
       });
 
-      // ── 7. Exploring badges stagger ───────────────────────────────────────
+      // ── 8. Exploring badges stagger ───────────────────────────────────────
       const exploreItems = Array.from(
         sectionRef.current?.querySelectorAll(".explore-item") ?? []
       );
@@ -127,7 +153,7 @@ export default function Skills() {
           { y: 20, opacity: 0 },
           {
             y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.06,
-            scrollTrigger: { trigger: exploreItems[0], start: "top 80%" },
+            scrollTrigger: { trigger: exploreItems[0], start: "top 80%", once: true },
           }
         );
       }
@@ -163,7 +189,7 @@ export default function Skills() {
 
         <h2
           ref={h2Ref}
-          className="text-[clamp(48px,7vw,100px)] font-bold tracking-[-0.04em] leading-[1.0] mb-[clamp(48px,6vh,80px)] font-[var(--font-heading)]"
+          className="text-[clamp(48px,7vw,100px)] font-bold tracking-[-0.04em] leading-[1.0] mb-[clamp(40px,5vh,72px)] font-[var(--font-heading)]"
         >
           Skills &amp; Tools
         </h2>
@@ -187,82 +213,97 @@ export default function Skills() {
         </div>
       </div>
 
-      <Separator className="bg-[var(--border)] mb-[clamp(48px,6vh,80px)] relative z-10" />
+      {/* ── Top separator line — animated draw ── */}
+      <div className="relative z-10 h-px overflow-hidden mb-[clamp(48px,6vh,80px)]">
+        <div
+          ref={topLineRef}
+          className="absolute inset-0 bg-[var(--border)] origin-left"
+        />
+      </div>
 
-      {/* ── 3-column skill grid ── */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-px bg-[var(--border)]">
+      {/* ── Skill Roll — editorial numbered list ── */}
+      <div className="relative z-10">
         {CATEGORIES.map((cat, ci) => (
-          <div key={cat.key} className="bg-[var(--bg-base)] px-0 md:px-8 md:first:pl-0 md:last:pr-0">
-            {/* Category header */}
-            <div className="pb-8">
-              <div className="flex items-center justify-between mb-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)]">
-                  {cat.label}
-                </p>
-                <span className="font-mono text-[10px] text-[var(--text-muted)]">
-                  {cat.skills.length} skills
-                </span>
-              </div>
-              {/* Animated accent underline */}
-              <div className="relative h-px bg-[var(--border)] overflow-hidden">
-                <div
-                  ref={(el) => { catLineRefs.current[ci] = el; }}
-                  className="absolute inset-0 bg-[var(--accent)] origin-left scale-x-0"
-                />
-              </div>
+          <div key={cat.key}>
+            {/* Category label row */}
+            <div className={`skill-cat-${cat.key} flex items-baseline justify-between mb-4`}>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--accent)]">
+                // {cat.label}
+              </span>
+              <span className="font-mono text-[10px] text-[var(--text-muted)]">
+                {cat.skills.length} skills
+              </span>
+            </div>
+
+            {/* Animated accent underline */}
+            <div className="relative h-px bg-[var(--border)] overflow-hidden mb-2">
+              <div
+                ref={(el) => { catLineRefs.current[ci] = el; }}
+                className="absolute inset-0 bg-[var(--accent)] origin-left scale-x-0"
+              />
             </div>
 
             {/* Skills list */}
-            <div>
+            <div className="mb-2">
               {cat.skills.map((skill, si) => {
                 const flatIdx = cat.offset + si;
                 return (
                   <div
                     key={skill.name}
-                    className={`skill-row-${cat.key} group py-5 border-b border-[var(--border)] last:border-b-0 cursor-default`}
+                    className={`skill-row-${cat.key} group relative border-b border-[var(--border)] last:border-b-0 py-6 cursor-default`}
                   >
-                    {/* Row 1: icon + name + years */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="flex items-center gap-3">
-                        <span className="text-base opacity-70 select-none">{skill.icon}</span>
-                        <span className="text-[clamp(14px,1.4vw,17px)] font-bold tracking-[-0.02em] group-hover:text-[var(--accent)] transition-colors duration-200 font-[var(--font-heading)]">
-                          {skill.name}
-                        </span>
+                    {/* Main row: index + icon + name + years + badge */}
+                    <div className="flex items-center gap-5 md:gap-8">
+                      {/* Index number */}
+                      <span className="font-mono text-[11px] text-[var(--text-muted)] w-6 shrink-0 select-none tabular-nums">
+                        {String(si + 1).padStart(2, "0")}
                       </span>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.10em] text-[var(--text-muted)] shrink-0 ml-3">
+
+                      {/* Icon */}
+                      <span className="text-xl opacity-60 select-none w-7 shrink-0">
+                        {skill.icon}
+                      </span>
+
+                      {/* Skill name — flex-1 */}
+                      <span className="font-[var(--font-heading)] text-[clamp(16px,2vw,26px)] font-bold tracking-[-0.02em] flex-1 group-hover:text-[var(--accent)] transition-colors duration-200">
+                        {skill.name}
+                      </span>
+
+                      {/* Years — hidden on small screens */}
+                      <span className="font-mono text-[10px] uppercase tracking-[0.10em] text-[var(--text-muted)] shrink-0 hidden sm:block">
                         {skill.years}
                       </span>
+
+                      {/* Level badge */}
+                      <Badge
+                        variant="outline"
+                        className="rounded-none font-mono text-[10px] tracking-[0.12em] border-[var(--border)] text-[var(--accent)] bg-transparent shrink-0"
+                      >
+                        {skill.level}
+                      </Badge>
                     </div>
 
-                    {/* Row 2: description (muted subtitle) */}
-                    <p className="font-mono text-[10px] leading-[1.6] text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-3 max-w-[260px]">
+                    {/* Hover-revealed description */}
+                    <p className="font-mono text-[10px] leading-[1.6] text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-3 ml-[52px] md:ml-[60px] max-w-[560px]">
                       {skill.description}
                     </p>
 
-                    {/* Row 3: progress bar */}
-                    <div className="relative h-px w-full bg-[var(--border)] mb-3 overflow-hidden">
+                    {/* Progress bar — GSAP fills to level width on scroll */}
+                    <div className="relative h-px w-full bg-[var(--border)] mt-4 overflow-hidden">
                       <div
                         ref={(el) => { barFillRefs.current[flatIdx] = el; }}
                         className="absolute inset-0 bg-[var(--accent)] origin-left"
                       />
                     </div>
-
-                    {/* Row 4: level badge */}
-                    <Badge
-                      variant="outline"
-                      className="rounded-none font-mono text-[10px] tracking-[0.12em] border-[var(--border)] text-[var(--accent)] bg-transparent"
-                    >
-                      {skill.level}
-                    </Badge>
                   </div>
                 );
               })}
             </div>
+
+            <Separator className="bg-[var(--border)] my-[clamp(40px,5vh,72px)]" />
           </div>
         ))}
       </div>
-
-      <Separator className="bg-[var(--border)] mt-[clamp(48px,6vh,80px)] mb-[clamp(48px,6vh,80px)] relative z-10" />
 
       {/* ── Currently Exploring ── */}
       <div className="relative z-10">
