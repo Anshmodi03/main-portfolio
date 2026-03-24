@@ -352,27 +352,6 @@ export const experiences: Experience[] = [
       { label: "Real-time features built", value: "5+" },
     ],
   },
-  {
-    id: "innovativearc",
-    role: "Frontend Developer Intern",
-    company: "InnovativeArc Solutions",
-    location: "Remote",
-    duration: "1 month",
-    type: "Internship",
-    status: "Current",
-    description: "Contributed to dynamic, user-friendly web interfaces, focusing on responsive front-end design and seamless user experiences for enterprise-level applications.",
-    achievements: [
-      "Built interactive UI components for client-facing dashboard",
-      "Developed EventSync — an event management web app with real-time updates",
-      "Improved UI responsiveness by 25% through optimized CSS and React components",
-      "Achieved 99% cross-browser compatibility for EventSync",
-    ],
-    tech: ["React", "JavaScript", "HTML", "CSS", "Tailwind CSS"],
-    metrics: [
-      { label: "UI responsiveness improved", value: "25%" },
-      { label: "Cross-browser compatibility", value: "99%" },
-    ],
-  },
 ];
 
 // ─── Tech Marquee ─────────────────────────────────────────────────────────────
