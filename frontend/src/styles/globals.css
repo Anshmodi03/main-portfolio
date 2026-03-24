@@ -518,6 +518,12 @@ h1, h2, h3, h4 {
   will-change: transform;
 }
 
+/* About section inline marquee — GSAP drives x translation */
+.about-marquee-track {
+  width: max-content;
+  will-change: transform;
+}
+
 /* ─── Timeline ──────────────────────────────────────────────── */
 .timeline-line {
   position: absolute;
