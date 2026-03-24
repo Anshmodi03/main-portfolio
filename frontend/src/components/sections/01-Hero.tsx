@@ -36,6 +36,7 @@ export default function Hero({ ready }: Props) {
   const subRef       = useRef<HTMLParagraphElement>(null);
   const ctaRef       = useRef<HTMLDivElement>(null);
   const scrollRef    = useRef<HTMLDivElement>(null);
+  const dotRef       = useRef<HTMLSpanElement>(null);
   const locationRef  = useRef<HTMLDivElement>(null);
   const orb1Ref      = useRef<HTMLDivElement>(null);
   const orb2Ref      = useRef<HTMLDivElement>(null);
@@ -258,6 +259,15 @@ export default function Hero({ ready }: Props) {
         "-=0.3"
       );
 
+      // Traveling dot — loops after entrance completes
+      tl.call(() => {
+        gsap.fromTo(
+          dotRef.current,
+          { y: 0, opacity: 1 },
+          { y: 44, opacity: 0, duration: 1.1, ease: "power2.in", repeat: -1, repeatDelay: 0.5 }
+        );
+      });
+
 
     }, sectionRef);
 
@@ -444,13 +454,24 @@ export default function Hero({ ready }: Props) {
         </div>
       </div>
 
-      {/* Scroll indicator — absolute bottom right */}
+      {/* Scroll indicator — traveling dot */}
       <div
         ref={scrollRef}
-        className="absolute bottom-[var(--gutter)] right-[var(--gutter)] z-10 flex flex-col items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] opacity-0"
+        className="absolute bottom-[var(--gutter)] right-[var(--gutter)] z-10 flex flex-col items-center gap-2 opacity-0"
       >
-        <div className="scroll-line-anim w-px h-12 bg-[var(--text-muted)]" />
-        <span>Scroll</span>
+        {/* Track + traveling dot */}
+        <div className="relative flex flex-col items-center w-px h-16">
+          {/* Static track */}
+          <div className="absolute inset-0 w-px bg-[var(--border-strong)]" />
+          {/* Traveling accent dot */}
+          <span
+            ref={dotRef}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-[3px] bg-[var(--accent)]"
+          />
+        </div>
+        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
+          Scroll
+        </span>
       </div>
     </section>
   );
