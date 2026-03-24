@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
 
@@ -35,8 +33,6 @@ export default function Hero({ ready }: Props) {
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const subRef       = useRef<HTMLParagraphElement>(null);
   const ctaRef       = useRef<HTMLDivElement>(null);
-  const scrollRef    = useRef<HTMLDivElement>(null);
-  const dotRef       = useRef<HTMLSpanElement>(null);
   const locationRef  = useRef<HTMLDivElement>(null);
   const orb1Ref      = useRef<HTMLDivElement>(null);
   const orb2Ref      = useRef<HTMLDivElement>(null);
@@ -44,10 +40,6 @@ export default function Hero({ ready }: Props) {
   const servicesRef  = useRef<HTMLDivElement>(null);
   const gridRef      = useRef<HTMLDivElement>(null);
   const terminalRef  = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrambleTextPlugin, DrawSVGPlugin);
-  }, []);
 
   useEffect(() => {
     if (!ready) return;
@@ -252,22 +244,6 @@ export default function Hero({ ready }: Props) {
         cursorDelay + 0.15
       );
 
-      // Scroll indicator
-      tl.fromTo(scrollRef.current,
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.6 },
-        "-=0.3"
-      );
-
-      // Traveling dot — loops after entrance completes
-      tl.call(() => {
-        gsap.fromTo(
-          dotRef.current,
-          { y: 0, opacity: 1 },
-          { y: 44, opacity: 0, duration: 1.1, ease: "power2.in", repeat: -1, repeatDelay: 0.5 }
-        );
-      });
-
 
     }, sectionRef);
 
@@ -454,25 +430,6 @@ export default function Hero({ ready }: Props) {
         </div>
       </div>
 
-      {/* Scroll indicator — traveling dot */}
-      <div
-        ref={scrollRef}
-        className="absolute bottom-[var(--gutter)] right-[var(--gutter)] z-10 flex flex-col items-center gap-2 opacity-0"
-      >
-        {/* Track + traveling dot */}
-        <div className="relative flex flex-col items-center w-px h-16">
-          {/* Static track */}
-          <div className="absolute inset-0 w-px bg-[var(--border-strong)]" />
-          {/* Traveling accent dot */}
-          <span
-            ref={dotRef}
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-[3px] bg-[var(--accent)]"
-          />
-        </div>
-        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
-          Scroll
-        </span>
-      </div>
     </section>
   );
 }

@@ -7,6 +7,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import Terminal from "@/components/ui/Terminal";
 import NoiseOverlay from "@/components/ui/NoiseOverlay";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import ScrollToTop from "@/components/ui/ScrollToTop";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -58,6 +59,7 @@ export default function RootLayout({
           <ScrollProgress />
           <CustomCursor />
           <Terminal />
+          <ScrollToTop />
 {children}
         </LenisProvider>
       </body>
