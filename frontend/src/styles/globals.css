@@ -1289,117 +1289,9 @@ h1, h2, h3, h4 {
 }
 @keyframes spin { to { rotate: 1turn; } }
 
-/* ─── Experience Section ─────────────────────────────────────── */
-.experience-section {
-  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
-  background: var(--bg-alpha-surface);
-}
-.experience-section--rel { position: relative; overflow: hidden; }
-.experience-section__glow { top: 50px; left: -200px; }
-.experience-container { max-width: 1400px; margin: 0 auto; }
-.experience-h2 {
-  font-family: var(--font-heading);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 16px 0 60px;
-}
-.experience-timeline {
-  position: relative;
-  max-width: 900px;
-  margin: 0 auto;
-}
-.experience-svg-line {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  height: 100%;
-  width: 2px;
-  overflow: visible;
-  z-index: 0;
-}
-.experience-entries {
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  position: relative;
-  z-index: 1;
-}
-.exp-card {
-  display: grid;
-  grid-template-columns: 1fr 40px 1fr;
-  gap: 24px;
-  align-items: center;
-  opacity: 0; /* GSAP reveals */
-}
-.exp-dot-wrap { display: flex; justify-content: center; }
-.exp-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 3px solid var(--bg-base);
-  box-shadow: 0 0 16px rgba(251, 70, 13, 0.5);
-}
-.exp-content {
-  background: var(--bg-base);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--accent);
-  padding: 24px;
-}
-.exp-content__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.exp-content__role {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-.exp-content__duration {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
-}
-.exp-content__company {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--accent);
-  margin: 0 0 12px;
-  letter-spacing: 0.06em;
-}
-.exp-content__desc {
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.7;
-  margin: 0 0 16px;
-}
-.exp-content__achievements {
-  margin: 0 0 16px;
-  padding: 0 0 0 16px;
-}
-.exp-content__achievement {
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 6px;
-}
-.exp-content__achievement-arrow { color: var(--accent); }
-.exp-content__chips { display: flex; flex-wrap: wrap; gap: 6px; }
-
-@media (max-width: 768px) {
-  .exp-card { grid-template-columns: 40px 1fr; }
-  .exp-card__empty { display: none; }
-  .experience-svg-line { left: 20px; transform: none; }
-}
+/* ─── Experience GSAP start states ──────────────────────────── */
+.exp-card { opacity: 0; }
+.exp-dot  { transform: scale(0); opacity: 0; }
 
 /* ─── Exploring Section ──────────────────────────────────────── */
 .exploring-section {
@@ -2232,23 +2124,6 @@ h1, h2, h3, h4 { letter-spacing: -0.03em; }
   z-index: 2;
 }
 
-/* ─── Experience — Timeline Enhancements ────────────────────── */
-.experience-section {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg-alpha-section);
-  padding: var(--section-pad) var(--gutter);
-}
-.experience-h2 {
-  font-size: clamp(48px, 7vw, 100px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  margin-bottom: clamp(64px, 8vh, 120px);
-}
-.timeline-line {
-  width: 2px;
-  background: linear-gradient(to bottom, transparent, var(--border) 10%, var(--border) 90%, transparent);
-}
 
 /* ─── Process — Ghost Numbers ───────────────────────────────── */
 .process-section {
