@@ -20,7 +20,7 @@ export default function Experience() {
   const indexRefs   = useRef<(HTMLSpanElement | null)[]>([]);
   const companyRefs = useRef<(HTMLHeadingElement | null)[]>([]);
   const pingRefs    = useRef<(HTMLSpanElement | null)[]>([]);
-  // Flat array: 2 entries × 2 metrics = 4 slots
+  // Flat array: entries × 2 metrics (i*2+mi indexing)
   const metricRefs  = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {

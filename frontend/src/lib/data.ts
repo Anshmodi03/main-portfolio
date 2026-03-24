@@ -332,6 +332,27 @@ export const experiences: Experience[] = [
     ],
   },
   {
+    id: "nullclass",
+    role: "Web Development Intern",
+    company: "NullClass",
+    location: "Remote",
+    duration: "Oct 2025 – Feb 2026",
+    type: "Internship",
+    status: "Completed",
+    description: "Completed intensive web development training and built a full-scale YouTube-like real-time streaming platform, gaining hands-on experience in full-stack architecture, video streaming, and production-grade frontend engineering.",
+    achievements: [
+      "Built a fully functional real-time YouTube-like platform from scratch end-to-end",
+      "Implemented user authentication, video streaming, and content discovery pipeline",
+      "Applied responsive design and performance optimisation across all device sizes",
+      "Completed certified training in modern web development — HTML, CSS, JavaScript, React",
+    ],
+    tech: ["HTML", "CSS", "JavaScript", "React", "Node.js", "MongoDB"],
+    metrics: [
+      { label: "Training completion", value: "100%" },
+      { label: "Real-time features built", value: "5+" },
+    ],
+  },
+  {
     id: "innovativearc",
     role: "Frontend Developer Intern",
     company: "InnovativeArc Solutions",
