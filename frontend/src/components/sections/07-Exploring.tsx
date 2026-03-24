@@ -3,15 +3,38 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import { exploring } from "@/lib/data";
 
-const STATUS_STYLE: Record<string, string> = {
+// ── Status config ───────────────────────────────────────────────────────────
+
+const STATUS_BADGE: Record<string, string> = {
   Learning:   "border-[var(--accent)] text-[var(--accent)]",
   Exploring:  "border-[var(--border-strong)] text-[var(--text-muted)]",
   Interested: "border-[var(--border)] text-[var(--text-muted)] opacity-60",
 };
+
+const STATUS_DOT: Record<string, string> = {
+  Learning:   "bg-[var(--accent)]",
+  Exploring:  "bg-[var(--border-strong)]",
+  Interested: "bg-[var(--border)]",
+};
+
+const TOOLTIP_MSG: Record<string, string> = {
+  Learning:   "Actively learning — building real projects",
+  Exploring:  "Researching concepts and reading deeply",
+  Interested: "On the radar — planning to explore soon",
+};
+
+// ── Component ───────────────────────────────────────────────────────────────
 
 export default function Exploring() {
   const sectionRef   = useRef<HTMLElement>(null);
@@ -19,7 +42,7 @@ export default function Exploring() {
   const eyebrowRef   = useRef<HTMLSpanElement>(null);
   const h2Ref        = useRef<HTMLHeadingElement>(null);
   const lineRef      = useRef<HTMLDivElement>(null);
-  // Per-row accent line refs
+  const cardRefs     = useRef<(HTMLDivElement | null)[]>([]);
   const accentRefs   = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -72,48 +95,55 @@ export default function Exploring() {
         );
       }
 
-      // ── 5. Row slide-in stagger ────────────────────────────────────────────
-      const rows = Array.from(sectionRef.current?.querySelectorAll(".explore-row") ?? []);
-      if (rows.length) {
+      // ── 5. Card entrance stagger ───────────────────────────────────────────
+      const cards = Array.from(sectionRef.current?.querySelectorAll(".explore-card") ?? []);
+      if (cards.length) {
         gsap.fromTo(
-          rows,
-          { x: -32, opacity: 0 },
+          cards,
+          { y: 60, opacity: 0, scale: 0.96 },
           {
-            x: 0, opacity: 1, duration: 0.65, ease: "power3.out", stagger: 0.07,
-            scrollTrigger: { trigger: rows[0], start: "top 78%", once: true },
+            y: 0, opacity: 1, scale: 1,
+            duration: 0.75, ease: "back.out(1.2)", stagger: 0.07,
+            scrollTrigger: { trigger: cards[0], start: "top 78%", once: true },
           }
         );
       }
 
-      // ── 6. Badge pop stagger ───────────────────────────────────────────────
-      const badges = Array.from(sectionRef.current?.querySelectorAll(".explore-badge") ?? []);
-      if (badges.length) {
+      // ── 6. Per-card accent line scaleX stagger ────────────────────────────
+      const accents = accentRefs.current.filter(Boolean);
+      if (accents.length) {
         gsap.fromTo(
-          badges,
-          { y: 14, opacity: 0 },
-          {
-            y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.5)", stagger: 0.05,
-            scrollTrigger: { trigger: badges[0], start: "top 80%", once: true },
-          }
-        );
-      }
-
-      // ── 7. Per-row accent line draws on scroll ─────────────────────────────
-      exploring.forEach((_, i) => {
-        const el = accentRefs.current[i];
-        if (!el) return;
-        gsap.fromTo(
-          el,
+          accents,
           { scaleX: 0, transformOrigin: "left center" },
           {
-            scaleX: 1, duration: 0.9, ease: "power3.out",
-            scrollTrigger: {
-              trigger: el.parentElement,
-              start: "top 82%",
-              once: true,
-            },
+            scaleX: 1, duration: 0.9, ease: "power3.out", stagger: 0.08,
+            scrollTrigger: { trigger: cards[0], start: "top 78%", once: true },
           }
         );
+      }
+
+      // ── 7. Learning dots pulse loop ────────────────────────────────────────
+      const learningDots = Array.from(
+        sectionRef.current?.querySelectorAll(".explore-dot--learning") ?? []
+      );
+      if (learningDots.length) {
+        gsap.to(learningDots, {
+          scale: 2.2,
+          opacity: 0,
+          duration: 1.2,
+          ease: "power2.out",
+          repeat: -1,
+          repeatDelay: 0.4,
+          stagger: 0.3,
+        });
+      }
+
+      // ── 8. Card hover lift via quickTo ────────────────────────────────────
+      cardRefs.current.forEach((card) => {
+        if (!card) return;
+        const yQ = gsap.quickTo(card, "y", { duration: 0.3, ease: "power2.out" });
+        card.addEventListener("mouseenter", () => yQ(-8));
+        card.addEventListener("mouseleave", () => yQ(0));
       });
 
     }, sectionRef);
@@ -160,68 +190,84 @@ export default function Exploring() {
           />
         </div>
 
-        {/* ── Item list ── */}
-        <div>
+        {/* ── Card grid ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-[var(--border)] border border-[var(--border)]">
           {exploring.map((item, i) => (
-            <div
+            <Card
               key={item.name}
-              className="explore-row group relative"
+              ref={(el) => { cardRefs.current[i] = el; }}
+              className="explore-card rounded-none border-0 bg-[var(--bg-surface)] relative overflow-hidden cursor-default"
             >
-              {/* Top accent line — draws in on scroll */}
-              {i === 0 && (
-                <div className="relative h-px bg-[var(--border)] overflow-hidden mb-0">
-                  <div
-                    ref={(el) => { accentRefs.current[i] = el; }}
-                    className="absolute inset-0 bg-[var(--accent)] origin-left"
-                  />
-                </div>
-              )}
+              {/* Top 2px accent line — GSAP scaleX draw */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden z-10">
+                <div
+                  ref={(el) => { accentRefs.current[i] = el; }}
+                  className="explore-accent absolute inset-0 bg-[var(--accent)] origin-left"
+                />
+              </div>
 
-              {/* Row content */}
-              <div className="grid grid-cols-[clamp(40px,4vw,64px)_1fr_auto] gap-6 items-center py-7 border-b border-[var(--border)]">
+              {/* Ghost background icon */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none select-none absolute -bottom-4 -right-4 text-[120px] leading-none opacity-[0.05] z-0"
+              >
+                {item.icon}
+              </span>
 
-                {/* Index */}
-                <span className="font-mono text-[clamp(11px,1vw,14px)] text-[var(--text-muted)] tabular-nums select-none leading-none">
+              {/* ── CardHeader: index + status badge ── */}
+              <CardHeader className="rounded-none px-6 pt-8 pb-0 flex-row items-start justify-between gap-4">
+                <span className="font-mono text-[11px] text-[var(--text-muted)] tabular-nums select-none leading-none">
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
-                {/* Name + icon */}
-                <div className="flex items-center gap-4 min-w-0">
-                  <span
-                    aria-hidden="true"
-                    className="text-[clamp(16px,1.8vw,22px)] opacity-50 select-none shrink-0"
-                  >
-                    {item.icon}
-                  </span>
-                  <span className="font-[var(--font-heading)] text-[clamp(20px,3vw,48px)] font-bold tracking-[-0.03em] leading-[1.05] group-hover:text-[var(--accent)] transition-colors duration-200 truncate">
-                    {item.name}
-                  </span>
-                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="cursor-default border-none bg-transparent p-0">
+                      <Badge
+                        variant="outline"
+                        className={`rounded-none font-mono text-[9px] tracking-[0.12em] bg-transparent ${STATUS_BADGE[item.status] ?? STATUS_BADGE.Interested}`}
+                      >
+                        {item.status}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className="rounded-none font-mono text-[10px] tracking-[0.08em] bg-[var(--bg-raised)] text-[var(--text-muted)] border border-[var(--border)]"
+                    >
+                      {TOOLTIP_MSG[item.status] ?? TOOLTIP_MSG.Interested}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </CardHeader>
 
-                {/* Status badge */}
-                <Badge
-                  variant="outline"
-                  className={`explore-badge rounded-none font-mono text-[9px] tracking-[0.12em] bg-transparent shrink-0 ${STATUS_STYLE[item.status] ?? STATUS_STYLE.Interested}`}
+              {/* ── CardContent: icon + name ── */}
+              <CardContent className="px-6 pt-6 pb-6 relative z-10">
+                <span
+                  aria-hidden="true"
+                  className="text-[clamp(28px,3vw,40px)] leading-none block mb-4 select-none"
                 >
-                  {item.status}
-                </Badge>
-              </div>
+                  {item.icon}
+                </span>
+                <h3 className="font-[var(--font-heading)] text-[clamp(18px,2vw,26px)] font-bold tracking-[-0.02em] leading-[1.15] text-[var(--text-primary)]">
+                  {item.name}
+                </h3>
+              </CardContent>
 
-              {/* Bottom accent line draws in for subsequent rows */}
-              {i > 0 && (
-                <div className="absolute top-0 left-0 right-0 h-px overflow-hidden pointer-events-none">
-                  <div
-                    ref={(el) => { accentRefs.current[i] = el; }}
-                    className="absolute inset-0 bg-[var(--accent)] origin-left opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  />
-                </div>
-              )}
-            </div>
+              {/* ── CardFooter: status dot + label ── */}
+              <CardFooter className="rounded-none border-t border-[var(--border)] bg-transparent px-6 py-4 flex items-center gap-2.5">
+                <span
+                  className={`explore-dot${item.status === "Learning" ? " explore-dot--learning" : ""} w-[6px] h-[6px] rounded-full shrink-0 ${STATUS_DOT[item.status] ?? STATUS_DOT.Interested}`}
+                />
+                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--text-muted)]">
+                  {item.status}
+                </span>
+              </CardFooter>
+            </Card>
           ))}
         </div>
 
         {/* ── Footer note ── */}
-        <div className="mt-[clamp(32px,4vh,56px)]">
+        <div className="mt-[clamp(32px,4vh,56px)] flex items-center gap-3">
+          <span className="w-8 h-px bg-[var(--border-strong)]" />
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--border-strong)]">
             Always learning · always building
           </p>
