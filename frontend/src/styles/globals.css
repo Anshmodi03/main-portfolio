@@ -1289,104 +1289,6 @@ h1, h2, h3, h4 {
 }
 @keyframes spin { to { rotate: 1turn; } }
 
-/* ─── Exploring Section ──────────────────────────────────────── */
-.exploring-section {
-  padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
-}
-.exploring-section--rel { position: relative; overflow: hidden; }
-.exploring-section__glow { bottom: -100px; right: -100px; }
-.exploring-container { max-width: 1400px; margin: 0 auto; }
-.exploring-h2 {
-  font-family: var(--font-heading);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 16px 0 8px;
-}
-.exploring-subtitle {
-  font-size: 15px;
-  color: var(--text-muted);
-  margin: 0 0 80px;
-}
-.exploring-orbit-wrap {
-  position: relative;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-}
-.exploring-center {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-size: 28px;
-  font-weight: 700;
-  color: #080808;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 0 40px rgba(251, 70, 13, 0.4);
-}
-.exploring-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-.exploring-badge-wrap {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
-.exploring-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  white-space: nowrap;
-  cursor: none;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.exploring-badge:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(251, 70, 13, 0.2);
-}
-.exploring-badge--learning {
-  background: rgba(251, 70, 13, 0.15);
-  border: 1px solid rgba(251, 70, 13, 0.4);
-}
-.exploring-badge--exploring {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-.exploring-badge--interested {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.exploring-badge__icon { font-size: 16px; }
-.exploring-badge__name {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-primary);
-  margin: 0;
-  letter-spacing: 0.06em;
-}
-.exploring-badge__status {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--accent);
-  margin: 0;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 /* ─── Process Section ────────────────────────────────────────── */
 .process-section {
   padding: clamp(80px, 10vh, 140px) clamp(24px, 5vw, 80px);
@@ -2177,20 +2079,6 @@ h1, h2, h3, h4 { letter-spacing: -0.03em; }
 }
 .process-step__desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
 
-/* ─── Exploring Section ─────────────────────────────────────── */
-.exploring-section {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg-alpha-section);
-  padding: var(--section-pad) var(--gutter);
-}
-.exploring-h2 {
-  font-size: clamp(48px, 7vw, 100px);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  margin-bottom: clamp(64px, 8vh, 120px);
-}
-
 /* ─── Contact — Email as Hero ───────────────────────────────── */
 .contact-section {
   position: relative;
@@ -2350,9 +2238,6 @@ h1, h2, h3, h4 { letter-spacing: -0.03em; }
   color: var(--text-primary);
   margin: 16px 0 0;
 }
-
-/* ─── Exploring SVG trail lines ──────────────────────────────── */
-.exploring-trail { stroke: rgba(251,70,13,0.15); stroke-width: 1; transition: opacity 0.3s; }
 
 /* ─── Reduced Motion ────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
