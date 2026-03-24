@@ -16,8 +16,6 @@ export default function Navbar() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const logoTextRef = useRef<HTMLSpanElement>(null);
 
-  const footerRef   = useRef<HTMLDivElement>(null);
-
   // Per-link refs (arrays)
   const linkInnerRefs   = useRef<(HTMLSpanElement | null)[]>([]);
   const linkIndexRefs   = useRef<(HTMLSpanElement | null)[]>([]);
@@ -100,14 +98,6 @@ export default function Navbar() {
       );
     }
 
-    // 9. Footer block
-    if (footerRef.current) {
-      gsap.fromTo(
-        footerRef.current,
-        { y: 16, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", delay: 0.65 }
-      );
-    }
   };
 
   // ── closeMenu: collapse + wipe ───────────────────────────────────────────
@@ -119,7 +109,6 @@ export default function Navbar() {
     const fadeOut = [
       ...linkIndexRefs.current.filter(Boolean),
       ...linkArrowRefs.current.filter(Boolean),
-      footerRef.current,
     ].filter(Boolean);
     if (fadeOut.length) {
       gsap.to(fadeOut, { opacity: 0, duration: 0.15 });
@@ -301,35 +290,6 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* ── Footer ── */}
-        <div
-          ref={footerRef}
-          className="opacity-0 pt-[clamp(12px,2vh,20px)] border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between flex-wrap gap-4"
-        >
-          <div className="flex gap-5">
-            <a
-              href="https://github.com/Anshmodi03"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] hover:text-[var(--text-primary)] no-underline transition-colors duration-200"
-              data-cursor="link"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.linkedin.com/in/ansh-modi-/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] hover:text-[var(--text-primary)] no-underline transition-colors duration-200"
-              data-cursor="link"
-            >
-              LinkedIn
-            </a>
-          </div>
-          <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[var(--border-strong)]">
-            Ansh Modi · Full Stack Developer
-          </span>
-        </div>
       </div>
     </>
   );
