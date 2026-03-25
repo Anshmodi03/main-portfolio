@@ -305,7 +305,7 @@ export default function About() {
           {/* BioLong */}
           <p
             ref={bioLongRef}
-            className="text-base leading-[1.8] text-[var(--text-muted)] max-w-[560px]"
+            className="text-base leading-[1.8] text-[var(--text-muted)] sm:max-w-[560px]"
           >
             {personal.bioLong}
           </p>
@@ -349,7 +349,7 @@ export default function About() {
           {/* 2×2 stat card grid */}
           <div
             ref={statsGridRef}
-            className="grid grid-cols-2 gap-[1px] bg-[var(--border)] border border-[var(--border)] [perspective:1200px]"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-[1px] bg-[var(--border)] border border-[var(--border)] [perspective:1200px]"
           >
             {stats.map((stat, i) => (
               <Card

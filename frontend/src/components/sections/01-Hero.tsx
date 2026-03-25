@@ -3,6 +3,9 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { stats } from "@/lib/data";
+import Counter from "@/components/ui/Counter";
+import { Card, CardContent } from "@/components/ui/card";
 
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
 
@@ -38,8 +41,9 @@ export default function Hero({ ready }: Props) {
   const orb2Ref      = useRef<HTMLDivElement>(null);
   const orb3Ref      = useRef<HTMLDivElement>(null);
   const servicesRef  = useRef<HTMLDivElement>(null);
-  const gridRef      = useRef<HTMLDivElement>(null);
-  const terminalRef  = useRef<HTMLDivElement>(null);
+  const gridRef         = useRef<HTMLDivElement>(null);
+  const terminalRef     = useRef<HTMLDivElement>(null);
+  const mobileStatsRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ready) return;
@@ -231,6 +235,22 @@ export default function Hero({ ready }: Props) {
         delay: cursorDelay + 0.4,
       });
 
+      // Mobile stats strip — stagger entrance after CTA (lg:hidden, only fires on mobile)
+      if (mobileStatsRef.current) {
+        const mobileCards = mobileStatsRef.current.querySelectorAll(".mobile-stat-card");
+        const mobileAccents = mobileStatsRef.current.querySelectorAll(".mobile-stat-accent");
+        tl.fromTo(mobileCards,
+          { y: 24, opacity: 0, scale: 0.97 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.4)", stagger: 0.07 },
+          "-=0.2"
+        );
+        tl.fromTo(mobileAccents,
+          { scaleX: 0, transformOrigin: "left center" },
+          { scaleX: 1, duration: 0.45, ease: "power3.out", stagger: 0.08 },
+          "<0.1"
+        );
+      }
+
       // Services list slides in after cursor
       const serviceItems = servicesRef.current?.querySelectorAll(".hero-service-item") ?? [];
       tl.fromTo(servicesRef.current,
@@ -364,6 +384,35 @@ export default function Hero({ ready }: Props) {
             </div>
 
           </div>
+
+          {/* ── Mobile stats strip — mirrors right-column stats, hidden on lg+ ── */}
+          <div
+            ref={mobileStatsRef}
+            className="lg:hidden mt-8 grid grid-cols-2 gap-[1px] bg-[var(--border)] border border-[var(--border)]"
+          >
+            {stats.map((stat) => (
+              <Card
+                key={stat.label}
+                className="mobile-stat-card relative rounded-none border-0 bg-[var(--bg-surface)] overflow-hidden"
+              >
+                <div className="mobile-stat-accent absolute top-0 left-0 right-0 h-[2px] bg-[var(--accent)]" />
+                <CardContent className="p-4 flex flex-col gap-1">
+                  <div className="text-[clamp(22px,5.5vw,34px)] font-bold tracking-[-0.04em] leading-none text-[var(--text-primary)] font-[var(--font-heading)]">
+                    <Counter
+                      to={stat.value}
+                      suffix={stat.suffix}
+                      display={(stat as { display?: string }).display}
+                      duration={2000}
+                    />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--text-muted)] leading-[1.4]">
+                    {stat.label}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
         </div>
 
         {/* ── RIGHT COLUMN ── */}

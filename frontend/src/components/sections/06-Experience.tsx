@@ -349,7 +349,7 @@ export default function Experience() {
                       {exp.metrics.map((m, mi) => (
                         <div
                           key={m.label}
-                          className="border border-[var(--border)] px-5 py-4 flex flex-col gap-1.5 min-w-[130px]"
+                          className="border border-[var(--border)] px-5 py-4 flex flex-col gap-1.5 w-[calc(50%-8px)] sm:w-auto sm:min-w-[130px]"
                         >
                           <span
                             ref={(el) => { metricRefs.current[i * 2 + mi] = el; }}
