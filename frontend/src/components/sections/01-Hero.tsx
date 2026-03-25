@@ -19,12 +19,12 @@ const SERVICES = [
 ];
 
 const TERMINAL_LINES = [
-  { type: "cmd",   text: "> npx create-portfolio --stack=MERN" },
-  { type: "ok",    text: "✓ React 19 + Next.js 16 installed"   },
-  { type: "ok",    text: "✓ Express 5 + MongoDB Atlas ready"   },
-  { type: "ok",    text: "✓ TypeScript strict mode enabled"    },
-  { type: "muted", text: "// Crafting digital experiences..."  },
-  { type: "cmd",   text: "> Server running on localhost:3000"  },
+  { type: "cmd",   text: "> npx create-portfolio --stack=MERN"  },
+  { type: "ok",    text: "✓ React 19 + Next.js 16 installed"    },
+  { type: "ok",    text: "✓ Express 5 + MongoDB Atlas ready"    },
+  { type: "ok",    text: "✓ JavaScript + TypeScript enabled"    },
+  { type: "muted", text: "// Crafting digital experiences..."   },
+  { type: "cmd",   text: "> npm run deploy -- --env=production" },
 ];
 
 
@@ -342,7 +342,7 @@ export default function Hero({ ready }: Props) {
             {/* Location badge */}
             <div ref={locationRef} className="flex items-center gap-2 mb-6 opacity-0">
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                India
+                Full Stack Dev
               </span>
               <span className="w-px h-3 bg-[var(--border-strong)]" />
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -367,8 +367,8 @@ export default function Hero({ ready }: Props) {
               ref={subRef}
               className="font-mono text-[13px] text-[var(--text-muted)] tracking-[0.02em] leading-relaxed mb-5 max-w-[480px] opacity-0"
             >
-              Full Stack Developer based in India. Building end-to-end web experiences
-              with the MERN stack, TypeScript, and pixel-precise UI.
+              Full Stack Developer building end-to-end web experiences with the MERN
+              stack, JavaScript, TypeScript, and pixel-precise UI.
             </p>
 
             {/* CTA row */}
