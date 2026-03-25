@@ -3,11 +3,14 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { stats } from "@/lib/data";
-import Counter from "@/components/ui/Counter";
-import { Card, CardContent } from "@/components/ui/card";
 
 const LINES = ["BUILDING", "THE FUTURE,", "ONE LINE", "AT A TIME."];
+
+const MOBILE_TERMINAL_LINES = [
+  { type: "cmd",   text: "> npx create-portfolio --dev" },
+  { type: "ok",    text: "✓ MERN + TypeScript ready"   },
+  { type: "muted", text: "// Open to new opportunities" },
+];
 
 const SERVICES = [
   { role: "Frontend", stack: "React · Next.js · GSAP"   },
@@ -41,9 +44,10 @@ export default function Hero({ ready }: Props) {
   const orb2Ref      = useRef<HTMLDivElement>(null);
   const orb3Ref      = useRef<HTMLDivElement>(null);
   const servicesRef  = useRef<HTMLDivElement>(null);
-  const gridRef         = useRef<HTMLDivElement>(null);
-  const terminalRef     = useRef<HTMLDivElement>(null);
-  const mobileStatsRef  = useRef<HTMLDivElement>(null);
+  const gridRef            = useRef<HTMLDivElement>(null);
+  const terminalRef        = useRef<HTMLDivElement>(null);
+  const availRef           = useRef<HTMLDivElement>(null);
+  const mobileTerminalRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ready) return;
@@ -235,20 +239,68 @@ export default function Hero({ ready }: Props) {
         delay: cursorDelay + 0.4,
       });
 
-      // Mobile stats strip — stagger entrance after CTA (lg:hidden, only fires on mobile)
-      if (mobileStatsRef.current) {
-        const mobileCards = mobileStatsRef.current.querySelectorAll(".mobile-stat-card");
-        const mobileAccents = mobileStatsRef.current.querySelectorAll(".mobile-stat-accent");
-        tl.fromTo(mobileCards,
+      // ── Mobile: Available for Work button entrance (lg:hidden) ──
+      if (availRef.current) {
+        tl.fromTo(availRef.current,
+          { x: -16, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+          "-=0.3"
+        );
+      }
+
+      // ── Mobile: compact terminal card entrance (lg:hidden) ──
+      if (mobileTerminalRef.current) {
+        tl.fromTo(mobileTerminalRef.current,
           { y: 24, opacity: 0, scale: 0.97 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.4)", stagger: 0.07 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" },
           "-=0.2"
         );
-        tl.fromTo(mobileAccents,
-          { scaleX: 0, transformOrigin: "left center" },
-          { scaleX: 1, duration: 0.45, ease: "power3.out", stagger: 0.08 },
-          "<0.1"
+
+        // Mobile terminal lines — ScrambleText typewriter (3 lines)
+        const mobileLineEls = mobileTerminalRef.current.querySelectorAll(".m-terminal-line");
+        const mobileBaseT = tl.duration();
+        mobileLineEls.forEach((el, i) => {
+          const spanEl = el.querySelector("span");
+          const originalText = MOBILE_TERMINAL_LINES[i].text;
+          const startT = mobileBaseT + i * 0.38;
+          tl.set(el, { opacity: 1 }, startT);
+          if (spanEl) {
+            tl.to(spanEl, {
+              duration: 0.32,
+              scrambleText: {
+                text: originalText,
+                chars: ">✓ abcdefghijklmnopqrstuvwxyz0123456789=-.:/",
+                revealDelay: 0,
+                speed: 0.7,
+              },
+              ease: "none",
+            }, startT);
+          }
+        });
+
+        // Mobile cursor
+        const mobileCursorDelay = tl.duration() + 0.1;
+        tl.fromTo(".m-terminal-cursor",
+          { opacity: 0 },
+          { opacity: 1, duration: 0.3 },
+          mobileCursorDelay
         );
+        gsap.to(".m-terminal-cursor", {
+          opacity: 0, duration: 0.55,
+          ease: "steps(1)", repeat: -1, yoyo: true,
+          delay: mobileCursorDelay + 0.4,
+        });
+
+        // Mobile terminal float + glow loops (outside timeline)
+        gsap.to(mobileTerminalRef.current, {
+          y: -5, duration: 4,
+          ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2.5,
+        });
+        gsap.to(mobileTerminalRef.current, {
+          boxShadow: "0 0 20px rgba(251,70,13,0.18), 0 0 40px rgba(251,70,13,0.06)",
+          duration: 3,
+          ease: "sine.inOut", yoyo: true, repeat: -1, delay: 2.2,
+        });
       }
 
       // Services list slides in after cursor
@@ -385,32 +437,66 @@ export default function Hero({ ready }: Props) {
 
           </div>
 
-          {/* ── Mobile stats strip — mirrors right-column stats, hidden on lg+ ── */}
+          {/* ── Mobile: Available for Work — hidden on lg+ ── */}
+          <div ref={availRef} className="lg:hidden mt-8 opacity-0">
+            <button
+              type="button"
+              onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="group relative inline-flex cursor-none border-none bg-transparent p-0"
+              data-cursor="link"
+              aria-label="Available for Work"
+            >
+              <span className="relative flex items-center gap-[6px]">
+                <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                  </svg>
+                </span>
+                <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
+                  Available for Work
+                </span>
+                <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+
+          {/* ── Mobile: compact terminal — hidden on lg+ ── */}
           <div
-            ref={mobileStatsRef}
-            className="lg:hidden mt-8 grid grid-cols-2 gap-[1px] bg-[var(--border)] border border-[var(--border)]"
+            ref={mobileTerminalRef}
+            className="lg:hidden mt-6 w-full opacity-0"
           >
-            {stats.map((stat) => (
-              <Card
-                key={stat.label}
-                className="mobile-stat-card relative rounded-none border-0 bg-[var(--bg-surface)] overflow-hidden"
-              >
-                <div className="mobile-stat-accent absolute top-0 left-0 right-0 h-[2px] bg-[var(--accent)]" />
-                <CardContent className="p-4 flex flex-col gap-1">
-                  <div className="text-[clamp(22px,5.5vw,34px)] font-bold tracking-[-0.04em] leading-none text-[var(--text-primary)] font-[var(--font-heading)]">
-                    <Counter
-                      to={stat.value}
-                      suffix={stat.suffix}
-                      display={(stat as { display?: string }).display}
-                      duration={2000}
-                    />
-                  </div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--text-muted)] leading-[1.4]">
-                    {stat.label}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Chrome bar */}
+            <div className="bg-[var(--bg-surface)] border border-[var(--border)] px-4 py-2.5 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+              <span className="font-mono text-[9px] text-[var(--text-muted)] ml-2 tracking-[0.1em] uppercase">
+                ansh@portfolio:~
+              </span>
+            </div>
+            {/* Terminal body */}
+            <div className="bg-[var(--bg-raised)] border border-t-0 border-[var(--border)] px-5 py-4 font-mono text-[11px] leading-[2.1]">
+              {MOBILE_TERMINAL_LINES.map((line, i) => (
+                <div key={i} className="m-terminal-line opacity-0">
+                  <span
+                    className={
+                      line.type === "cmd"
+                        ? "text-[var(--accent)]"
+                        : line.type === "ok"
+                        ? "text-[#22c55e]"
+                        : "text-[var(--text-muted)]"
+                    }
+                  >
+                    {line.text}
+                  </span>
+                </div>
+              ))}
+              <span className="m-terminal-cursor inline-block w-[7px] h-[12px] bg-[var(--accent)] align-middle opacity-0" />
+            </div>
           </div>
 
         </div>
