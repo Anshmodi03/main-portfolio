@@ -188,21 +188,21 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="hidden sm:inline-flex group relative cursor-none border-none bg-transparent p-0 z-[1001]"
+            className="inline-flex group relative cursor-none border-none bg-transparent p-0 z-[1001]"
             data-cursor="link"
             aria-label="Available for Work — scroll to contact"
           >
             <span className="relative flex items-center gap-[6px]">
-              <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <span className="flex shrink-0 items-center justify-center w-7 h-9 sm:w-8 sm:h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
+                <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                   <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
                 </svg>
               </span>
-              <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
+              <span className="flex items-center justify-center h-9 sm:h-10 px-4 sm:px-6 font-mono text-[9px] sm:text-[11px] uppercase tracking-[0.12em] sm:tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[32px] sm:-translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
                 Available for Work
               </span>
-              <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <span className="absolute right-0 flex shrink-0 items-center justify-center w-7 h-9 sm:w-8 sm:h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
+                <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                   <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
                 </svg>
               </span>

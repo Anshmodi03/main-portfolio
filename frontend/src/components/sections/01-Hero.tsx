@@ -46,7 +46,6 @@ export default function Hero({ ready }: Props) {
   const servicesRef  = useRef<HTMLDivElement>(null);
   const gridRef            = useRef<HTMLDivElement>(null);
   const terminalRef        = useRef<HTMLDivElement>(null);
-  const availRef           = useRef<HTMLDivElement>(null);
   const mobileTerminalRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -239,15 +238,6 @@ export default function Hero({ ready }: Props) {
         delay: cursorDelay + 0.4,
       });
 
-      // ── Mobile: Available for Work button entrance (lg:hidden) ──
-      if (availRef.current) {
-        tl.fromTo(availRef.current,
-          { x: -16, opacity: 0 },
-          { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-          "-=0.3"
-        );
-      }
-
       // ── Mobile: compact terminal card entrance (lg:hidden) ──
       if (mobileTerminalRef.current) {
         tl.fromTo(mobileTerminalRef.current,
@@ -435,33 +425,6 @@ export default function Hero({ ready }: Props) {
               </a>
             </div>
 
-          </div>
-
-          {/* ── Mobile: Available for Work — hidden on lg+ ── */}
-          <div ref={availRef} className="lg:hidden mt-8 opacity-0">
-            <button
-              type="button"
-              onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
-              className="group relative inline-flex cursor-none border-none bg-transparent p-0"
-              data-cursor="link"
-              aria-label="Available for Work"
-            >
-              <span className="relative flex items-center gap-[6px]">
-                <span className="flex shrink-0 items-center justify-center w-8 h-10 origin-left -rotate-45 scale-0 bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:rotate-0 group-hover:scale-100">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-                  </svg>
-                </span>
-                <span className="flex items-center justify-center h-10 px-6 font-mono text-[11px] uppercase tracking-[0.14em] bg-[var(--accent)] text-white -translate-x-[38px] transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:translate-x-0">
-                  Available for Work
-                </span>
-                <span className="absolute right-0 flex shrink-0 items-center justify-center w-8 h-10 origin-right bg-[var(--accent)] text-white transition-transform duration-700 [transition-timing-function:cubic-bezier(0.77,0,0.175,1)] group-hover:-rotate-45 group-hover:scale-0">
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-                  </svg>
-                </span>
-              </span>
-            </button>
           </div>
 
           {/* ── Mobile: compact terminal — hidden on lg+ ── */}
