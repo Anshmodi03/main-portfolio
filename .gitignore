@@ -12,7 +12,6 @@ Thumbs.db
 # Env files (never commit credentials)
 .env
 .env.*
-!.env.example
 
 # Logs
 *.log
