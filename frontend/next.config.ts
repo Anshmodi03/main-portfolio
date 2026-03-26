@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:5000";
+
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -15,7 +17,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://images.unsplash.com https://cdn.sanity.io",
       "font-src 'self'",
-      "connect-src 'self' http://localhost:5000",
+      `connect-src 'self' ${BACKEND_URL}`,
       "worker-src 'self' blob:",
       "frame-ancestors 'none'",
     ].join("; "),
