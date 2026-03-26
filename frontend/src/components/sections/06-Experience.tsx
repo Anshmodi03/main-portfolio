@@ -377,6 +377,21 @@ export default function Experience() {
                       </Badge>
                     ))}
                   </div>
+
+                  {/* Certificate link */}
+                  {exp.certificate && (
+                    <a
+                      href={exp.certificate}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 mt-5 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors duration-200 no-underline group"
+                      data-cursor="link"
+                    >
+                      <span className="w-8 h-px bg-[var(--border)] group-hover:bg-[var(--accent)] transition-colors duration-200" />
+                      View Certificate
+                      <span className="group-hover:translate-x-1 transition-transform duration-200">↗</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

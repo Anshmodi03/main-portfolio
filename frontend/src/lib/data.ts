@@ -28,6 +28,7 @@ export interface Experience {
   achievements: string[];
   tech: string[];
   metrics: { label: string; value: string }[];
+  certificate?: string;
 }
 
 export interface Skill {
@@ -248,6 +249,25 @@ export const exploring: ExploringItem[] = [
 
 export const projects: Project[] = [
   {
+    id: "luxestore",
+    name: "LuxeStore",
+    description: "Production-grade luxury e-commerce with Google OAuth, Stripe payments, and animated UI.",
+    longDesc: "LuxeStore is a full-stack luxury e-commerce platform featuring Google Sign-In via Firebase, Stripe multi-step checkout, product catalog with filtering/search/pagination, persistent cart & wishlist, and a user dashboard for orders and addresses.",
+    tags: ["Full Stack", "E-Commerce", "MERN"],
+    tech: ["React", "TypeScript", "Tailwind CSS", "GSAP", "Node.js", "Express.js", "MongoDB", "Firebase", "Stripe"],
+    year: "2026",
+    status: "Complete",
+    featured: true,
+    image: "/project/Luxestore.png",
+    github: "https://github.com/Anshmodi03/luxestore-ecommerce",
+    live: "https://luxestore-ecommerce.vercel.app",
+    stats: [
+      { label: "Commits", value: "56+" },
+      { label: "Features", value: "10+" },
+      { label: "Tech", value: "14+" },
+    ],
+  },
+  {
     id: "parknest",
     name: "ParkNest",
     description: "Smart parking solution with real-time availability and intelligent booking.",
@@ -257,7 +277,7 @@ export const projects: Project[] = [
     year: "2024",
     status: "Complete",
     featured: true,
-    image: "/parknest.png",
+    image: "/project/parknest.png",
     github: "https://github.com/Anshmodi03/ParkNest",
     live: "https://parknest.vercel.app/",
     stats: [
@@ -276,7 +296,7 @@ export const projects: Project[] = [
     year: "2024",
     status: "Complete",
     featured: true,
-    image: "/connectify.png",
+    image: "/project/connectify.png",
     github: "https://github.com/Anshmodi03/MERN-social-media",
     live: "https://mern-social-media-rho.vercel.app/home",
     stats: [
@@ -295,7 +315,7 @@ export const projects: Project[] = [
     year: "2024",
     status: "Complete",
     featured: true,
-    image: "/imdb.png",
+    image: "/project/imdb.png",
     github: "https://github.com/Anshmodi03/imdb-clone",
     live: "https://anshmodi03-imdb-clone.vercel.app/",
     stats: [
@@ -384,6 +404,7 @@ export const experiences: Experience[] = [
       { label: "Support queries reduced", value: "30%" },
       { label: "Project uptime", value: "100%" },
     ],
+    certificate: "/certificates/missiont5.pdf",
   },
   {
     id: "nullclass",
@@ -405,6 +426,7 @@ export const experiences: Experience[] = [
       { label: "Training completion", value: "100%" },
       { label: "Real-time features built", value: "5+" },
     ],
+    certificate: "/certificates/nullclass.pdf",
   },
 ];
 
