@@ -411,7 +411,7 @@ export default function Hero({ ready }: Props) {
                 </span>
               </button>
               <a
-                href="/resume.pdf"
+                href="/resume/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative inline-block cursor-none ml-2 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--border-strong)] hover:text-[var(--text-muted)] transition-colors duration-300"

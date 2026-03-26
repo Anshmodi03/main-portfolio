@@ -75,7 +75,7 @@ const COMMANDS: Record<string, Line[]> = {
     { type: "info",     text: "  hero  about  skills  projects  experience  exploring  process  contact" },
   ],
   resume: [
-    { type: "response", text: "opening LinkedIn profile..." },
+    { type: "response", text: "opening resume ↗" },
   ],
 };
 
@@ -270,7 +270,7 @@ export default function Terminal() {
       return;
     }
     if (cmd === "resume") {
-      window.open(personal.linkedin, "_blank", "noopener,noreferrer");
+      window.open("/resume/resume.pdf", "_blank", "noopener,noreferrer");
       setLines((prev) => [...prev, promptLine, ...COMMANDS.resume]);
       return;
     }
