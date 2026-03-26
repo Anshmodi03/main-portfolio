@@ -19,12 +19,12 @@ const SERVICES = [
 ];
 
 const TERMINAL_LINES = [
-  { type: "cmd",   text: "> npx create-portfolio --stack=MERN"  },
-  { type: "ok",    text: "✓ React 19 + Next.js 16 installed"    },
-  { type: "ok",    text: "✓ Express 5 + MongoDB Atlas ready"    },
-  { type: "ok",    text: "✓ JavaScript + TypeScript enabled"    },
-  { type: "muted", text: "// Crafting digital experiences..."   },
-  { type: "cmd",   text: "> npm run deploy -- --env=production" },
+  { type: "cmd",   text: "> npx create-portfolio --stack=MERN+TS"  },
+  { type: "ok",    text: "✓ React 19 + Next.js 16 + Turbopack"    },
+  { type: "ok",    text: "✓ Express 5 + MongoDB Atlas connected"   },
+  { type: "ok",    text: "✓ JavaScript & TypeScript strict mode"   },
+  { type: "muted", text: "// Building pixel-precise experiences..." },
+  { type: "cmd",   text: "> Ready on http://localhost:3000"        },
 ];
 
 

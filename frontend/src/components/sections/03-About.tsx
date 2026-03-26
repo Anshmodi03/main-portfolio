@@ -11,15 +11,16 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 const TECH_TAGS = [
-  "MERN Stack", "TypeScript", "Next.js", "GSAP",
-  "MongoDB", "REST APIs", "TailwindCSS", "Node.js",
+  "JavaScript", "TypeScript", "React", "Next.js",
+  "Node.js", "Express.js", "MongoDB", "REST APIs",
+  "TailwindCSS", "GSAP",
 ];
 
 const INFO_ROWS = [
-  { key: "Location", value: "India" },
+  { key: "Location", value: "Remote" },
   { key: "Since",    value: "2023" },
   { key: "Role",     value: "Full Stack Dev" },
-  { key: "Stack",    value: "MERN", accent: true },
+  { key: "Stack",    value: "MERN + TS", accent: true },
 ];
 
 export default function About() {

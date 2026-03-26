@@ -53,21 +53,21 @@ export const personal = {
   initials: "AM",
   role: "Full Stack Developer",
   tagline: "Building the future, one line at a time.",
-  bio: "I'm Ansh Modi, a Full Stack Developer from India, skilled in the MERN stack (MongoDB, Express.js, React, Node.js). I build scalable web applications—from real-time platforms to smart booking systems—combining clean architecture with modern UI.",
-  bioLong: "I led development of a scalable internship platform at MissionT5, delivering responsive front-end interfaces and robust backend systems. Certified by upGrad, I'm passionate about innovative tech solutions and always hungry to learn what's next.",
+  bio: "I'm Ansh Modi, a Full Stack Developer skilled in the MERN stack and TypeScript. I build scalable web applications—from real-time social platforms to smart booking systems—combining clean architecture with pixel-precise UI.",
+  bioLong: "I led full-stack development at MissionT5, building a scalable internship platform with Node.js, React, and MongoDB. With 2+ years across 50+ repositories—JavaScript, TypeScript, Next.js, and beyond—I'm passionate about clean code, modern tooling, and always hungry for what's next.",
   email: "modiaastha01@gmail.com",
   github: "https://github.com/Anshmodi03",
   linkedin: "https://www.linkedin.com/in/ansh-modi-/",
-  location: "India",
+  location: "Remote",
   available: true,
 };
 
 // ─── Stats ───────────────────────────────────────────────────────────────────
 
 export const stats = [
-  { value: 40, suffix: "+", label: "Projects Completed" },
-  { value: 1, suffix: "+", label: "Years Experience" },
-  { value: 10000, suffix: "+", label: "Lines of Code", display: "10K+" },
+  { value: 50, suffix: "+", label: "Projects Completed" },
+  { value: 2,  suffix: "+", label: "Years Experience" },
+  { value: 50000, suffix: "+", label: "Lines of Code", display: "50K+" },
   { value: 24, suffix: "/7", label: "Learning Mode" },
 ];
 
