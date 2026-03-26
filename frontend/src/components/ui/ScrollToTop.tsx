@@ -23,24 +23,31 @@ export default function ScrollToTop() {
     gsap.set(wrap, { scale: 0, opacity: 0, y: 16 });
 
     // ── 2. ScrollTrigger: show after Hero leaves, hide when it returns ──
-    const ctx = gsap.context(() => {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: "#hero",
-          start: "bottom top",
-          onEnter: () =>
-            gsap.to(wrap, {
-              scale: 1, opacity: 1, y: 0,
-              duration: 0.5, ease: "back.out(1.7)",
-            }),
-          onLeaveBack: () =>
-            gsap.to(wrap, {
-              scale: 0, opacity: 0, y: 12,
-              duration: 0.3, ease: "power2.in",
-            }),
-        },
+    // Use the element directly (not string selector) to avoid "Element not
+    // found" warnings when the effect fires before #hero is in the DOM.
+    const heroEl = document.querySelector<HTMLElement>("#hero");
+    let ctx: gsap.Context | null = null;
+
+    if (heroEl) {
+      ctx = gsap.context(() => {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroEl,
+            start: "bottom top",
+            onEnter: () =>
+              gsap.to(wrap, {
+                scale: 1, opacity: 1, y: 0,
+                duration: 0.5, ease: "back.out(1.7)",
+              }),
+            onLeaveBack: () =>
+              gsap.to(wrap, {
+                scale: 0, opacity: 0, y: 12,
+                duration: 0.3, ease: "power2.in",
+              }),
+          },
+        });
       });
-    });
+    }
 
     // ── 3 & 4. Hover: icon nudge via quickTo ──
     const iconEl = iconRef.current;
@@ -54,7 +61,7 @@ export default function ScrollToTop() {
     wrap.addEventListener("mouseleave", onLeave);
 
     return () => {
-      ctx.revert();
+      ctx?.revert();
       wrap.removeEventListener("mouseenter", onEnter);
       wrap.removeEventListener("mouseleave", onLeave);
     };
