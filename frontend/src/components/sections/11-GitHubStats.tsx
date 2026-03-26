@@ -13,13 +13,12 @@ type GitHubData = {
 };
 
 const FALLBACK: GitHubData = {
-  repos: 40, followers: 20, stars: 15,
+  repos: 50, followers: 1, stars: 0,
   languages: [
-    { name: "JavaScript", pct: 55 },
-    { name: "TypeScript", pct: 30 },
-    { name: "CSS",        pct: 10 },
-    { name: "HTML",       pct: 4  },
-    { name: "Python",     pct: 1  },
+    { name: "JavaScript", pct: 75 },
+    { name: "CSS",        pct: 13 },
+    { name: "TypeScript", pct: 6  },
+    { name: "HTML",       pct: 6  },
   ],
 };
 
