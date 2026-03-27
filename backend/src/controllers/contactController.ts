@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import nodemailer from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import Contact from "../models/Contact";
 
 function escapeHtml(str: string): string {
@@ -16,11 +17,12 @@ const createTransporter = () =>
     host: "smtp.gmail.com",
     port: 587,
     secure: false, // STARTTLS
+    family: 4, // Force IPv4 — Render free tier doesn't route IPv6
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-  });
+  } as SMTPTransport.Options);
 
 export const submitContact = async (req: Request, res: Response): Promise<void> => {
   try {
