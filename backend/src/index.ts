@@ -1,9 +1,5 @@
 import "dotenv/config";
-import dns from "dns";
 import express from "express";
-
-// Render free tier blocks outbound IPv6 — force all DNS lookups to return IPv4
-dns.setDefaultResultOrder("ipv4first");
 import helmet from "helmet";
 import mongoose from "mongoose";
 import { corsMiddleware } from "./middleware/cors";
