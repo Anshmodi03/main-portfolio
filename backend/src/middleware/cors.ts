@@ -8,12 +8,9 @@ const allowedOrigins = [
 
 export const corsMiddleware = cors({
   origin: (origin, callback) => {
-    // No-origin requests (Postman, curl) are allowed only in development.
-    // In production the Next.js proxy always sends an origin header.
-    if (!origin) {
-      if (process.env.NODE_ENV !== "production") return callback(null, true);
-      return callback(new Error("CORS: Missing origin in production"));
-    }
+    // No-origin requests are server-to-server calls (Node.js fetch, Postman, curl).
+    // Browsers always send Origin; only server runtimes omit it — allow them through.
+    if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(new Error(`CORS: Origin ${origin} not allowed`));
   },
