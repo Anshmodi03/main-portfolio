@@ -270,6 +270,6 @@ All design tokens live in `frontend/src/styles/globals.css` as CSS custom proper
 
 <div align="center">
 
-Built by **Ansh Modi** · [anshmodi.com](https://www.anshmodi.com) · [LinkedIn](https://www.linkedin.com/in/ansh-modi-/) · [GitHub](https://github.com/Anshmodi03)
+Built by **Ansh Modi** · [Portfolio website](https://anshmodi-port.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/ansh-modi-/) · [GitHub](https://github.com/Anshmodi03)
 
 </div>
