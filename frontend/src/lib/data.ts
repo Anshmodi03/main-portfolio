@@ -22,7 +22,7 @@ export interface Experience {
   company: string;
   location: string;
   duration: string;
-  type: "Full-time" | "Internship";
+  type: "Full-time" | "Internship" | "Founder";
   status: "Completed" | "Current";
   description: string;
   achievements: string[];
@@ -55,7 +55,7 @@ export const personal = {
   role: "Full Stack Developer",
   tagline: "Building the future, one line at a time.",
   bio: "I'm Ansh Modi, a Full Stack Developer skilled in the MERN stack and TypeScript. I build scalable web applications—from real-time social platforms to smart booking systems—combining clean architecture with pixel-precise UI.",
-  bioLong: "I led full-stack development at MissionT5, building a scalable internship platform with Node.js, React, and MongoDB. With 2+ years across 50+ repositories—JavaScript, TypeScript, Next.js, and beyond—I'm passionate about clean code, modern tooling, and always hungry for what's next.",
+  bioLong: "I'm also the solo founder of Vrenic, an AI interview-practice product I designed, built and shipped end to end. I led full-stack development at MissionT5, building a scalable internship platform with Node.js, React, and MongoDB. With 2+ years across 50+ repositories—JavaScript, TypeScript, Next.js, and beyond—I'm passionate about clean code, modern tooling, and always hungry for what's next.",
   email: "modiaastha01@gmail.com",
   github: "https://github.com/Anshmodi03",
   linkedin: "https://www.linkedin.com/in/ansh-modi-/",
@@ -249,6 +249,25 @@ export const exploring: ExploringItem[] = [
 
 export const projects: Project[] = [
   {
+    id: "vrenic",
+    name: "Vrenic",
+    description: "AI interview coach — live voice and video mock interviews, proctored coding practice, and company-specific prep tracks. My startup, live at vrenic.com.",
+    longDesc: "Vrenic is a solo-founded AI interview-practice product, live at vrenic.com. It offers practice and panel interviews, live voice and video mock interviews with on-device video analysis (video never leaves the browser), a proctored coding assessment backed by a bank of verified problems, résumé analysis, and company prep tracks with a readiness meter and opt-in reminder emails. Built end to end: Next.js static front end, Python and TypeScript Cloudflare Workers back end, staged CI deploys.",
+    tags: ["Startup", "AI", "Full Stack"],
+    tech: ["Next.js", "TypeScript", "Python", "Cloudflare Workers", "Cloudflare D1", "Clerk", "Gemini", "GSAP"],
+    year: "2026",
+    status: "In Progress",
+    featured: true,
+    image: "/project/vrenic.png",
+    github: "",
+    live: "https://vrenic.com",
+    stats: [
+      { label: "AI modes", value: "4" },
+      { label: "Languages", value: "8" },
+      { label: "Coding problems", value: "616" },
+    ],
+  },
+  {
     id: "luxestore",
     name: "LuxeStore",
     description: "Production-grade luxury e-commerce with Google OAuth, Stripe payments, and animated UI.",
@@ -384,6 +403,27 @@ export const otherProjects: Omit<Project, "featured" | "stats">[] = [
 // ─── Experience ────────────────────────────────────────────────────────────────
 
 export const experiences: Experience[] = [
+  {
+    id: "vrenic",
+    role: "Founder & Solo Developer",
+    company: "Vrenic",
+    location: "Remote",
+    duration: "2026 – Present",
+    type: "Founder",
+    status: "Current",
+    description: "Founded and built Vrenic, an AI interview-practice startup, as the only developer — product, front end, back end, infrastructure, security and deployment.",
+    achievements: [
+      "Shipped live voice and video mock interviews with on-device video analysis, so camera frames never leave the browser",
+      "Built a proctored coding assessment on a bank of 616 execution-verified problems",
+      "Launched company prep tracks: a readiness meter built from real session scores, plus opt-in reminder emails",
+      "Run staged deploys across three Cloudflare Workers with CI gates, preview URLs and one-step rollback",
+    ],
+    tech: ["Next.js", "TypeScript", "Python", "Cloudflare Workers", "Gemini", "GSAP"],
+    metrics: [
+      { label: "AI interview modes", value: "4" },
+      { label: "Interview languages", value: "8" },
+    ],
+  },
   {
     id: "missiont5",
     role: "Team Lead Full Stack Developer",
